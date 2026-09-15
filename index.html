@@ -240,9 +240,9 @@ const CHARS={
 const YOU={scale:0.75,kind:"human",person:2,avatar:"eason",
            pron:{subj:"you",obj:"you",poss:"your"},be:"are",s3:false,
            zh:{s:"你",o:"你",p:"你的"}};
-const A=id=>id==="you"?YOU:CHARS[id];
-const sprite=id=>id==="you"?YOU.avatar:id;
-const subjWord=id=>{const c=A(id);return c.name?c.pron.subj:cap(c.pron.subj);};
+function A(id){return id==="you"?YOU:CHARS[id];}
+function sprite(id){return id==="you"?YOU.avatar:id;}
+function subjWord(id){const c=A(id);return c.name?c.pron.subj:cap(c.pron.subj);}
 const POSE={neutral:"01",give:"02",receive:"03",point:"04",run:"05",
             sit:"06",hold:"07",kick:"08",eat:"09",like:"10",
             jump:"11",walk:"12",throw:"13",drink:"14",read:"15",
@@ -255,7 +255,7 @@ const HUMANS=["meimei","ani","eason","xinxin"];   // 判定题只用第三人称
 const ALLCH=["meimei","ani","xiaotao","eason","xinxin"];
 const BG=["classroom","kitchen","park","playground"];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
-const cap=s=>s[0].toUpperCase()+s.slice(1);
+function cap(s){return s[0].toUpperCase()+s.slice(1);}
 const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
 
 /* ---------------- 词库 ---------------- */
@@ -296,13 +296,13 @@ const NOUNS={
  table:{e:"🛏️",z:"桌子",t:["look"]},
  door:{e:"🚪",z:"门",t:["look"]},
  sun:{e:"☀️",z:"太阳",t:["look"]}};
-const EMO=k=>NOUNS[k].e;
+function EMO(k){return (NOUNS[k]||{}).e||"";}
 const VERBS_W={run:"run",sit:"sit",kick:"kick",eat:"eat",point:"point",
                give:"give",hold:"hold",like:"like"};
 const BODY_W=["hand","knee","foot","ear","nose","hair","eye","mouth"];
 const EMO_W={happy:"开心",sad:"难过",angry:"生气",tired:"累"};
 
-const label=k=>k.replace(/_/g," ");
+function label(k){return k.replace(/_/g," ");}
 const ZH_EXTRA={run:"跑",sit:"坐",kick:"踢",eat:"吃",point:"指",give:"给",hold:"拿着",like:"喜欢",
 hand:"手",knee:"膝盖",foot:"脚",ear:"耳朵",nose:"鼻子",hair:"头发",eye:"眼睛",mouth:"嘴巴"};
 const ZH=new Proxy({},{get:(_,k)=>(NOUNS[k]&&NOUNS[k].z)||ZH_EXTRA[k]||EMO_W[k]});
@@ -336,7 +336,7 @@ const Say=(()=>{
  return f;})();
 
 /* ---------------- 进度 ---------------- */
-const $=id=>document.getElementById(id);
+function $(id){return document.getElementById(id);}
 let DB={l:0,r:0,s:0,w:{}};
 try{Object.assign(DB,JSON.parse(localStorage.getItem("sayit.v3")||"{}"));}catch(e){}
 if(!DB.w)DB.w={};
@@ -627,10 +627,10 @@ const SAY_VERBS={
   sleep:{base:"sleep",s:"sleeps",pose:"sleep",zh:"睡觉", recip:false, need:null, noObj:true},
   wave :{base:"wave", s:"waves", pose:"wave", zh:"挥手", recip:false, need:null, noObj:true}
 };
-const okObj=(v,o)=>{const V=SAY_VERBS[v]; if(V.noObj) return true;
-  return !V.need || V.need.some(t=>NOUNS[o].t.includes(t));};
-const objsFor=v=>Object.keys(NOUNS).filter(o=>okObj(v,o));
-const vForm=(v,id)=>A(id).s3 ? SAY_VERBS[v].s : SAY_VERBS[v].base;
+function okObj(v,o){const V=SAY_VERBS[v]; if(!V) return false; if(V.noObj) return true;
+  return !V.need || V.need.some(t=>NOUNS[o].t.includes(t));}
+function objsFor(v){return Object.keys(NOUNS).filter(o=>okObj(v,o));}
+function vForm(v,id){return A(id).s3 ? SAY_VERBS[v].s : SAY_VERBS[v].base;}
 
 const ACTORS=["xiaotao","you","meimei","ani","eason","xinxin","ashan"];
 const NAME={xiaotao:"小萄",you:"你",meimei:"梅梅",ani:"阿妮",eason:"Eason",xinxin:"心心",ashan:"阿扇"};
@@ -860,6 +860,7 @@ function tab(w){ Say.stop();
 
 /* ---------------- 设置 ---------------- */
 function onVoices(){
+  if(!document.body) return;
   const sel=$("voice"); if(!sel) return;
   const vs=Say.voices(); sel.innerHTML="";
   vs.forEach(v=>{ const o=document.createElement("option");
