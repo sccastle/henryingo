@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Say It</title>
+<style>
+:root{--paper:#EEF2F5;--card:#FFF;--ink:#1B2733;--soft:#6B7A8C;--line:#DDE4EA;
+--green:#2F8F5B;--green-d:#1F6941;--sun:#F5B93B;
+--shadow:0 1px 2px rgba(27,39,51,.07),0 8px 22px rgba(27,39,51,.07);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);overflow:hidden;user-select:none;
+font:16px/1.5 "Century Gothic","Avenir Next",Futura,"Trebuchet MS",-apple-system,"PingFang SC",sans-serif;
+display:flex;flex-direction:column}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+header{display:flex;align-items:center;gap:8px;padding:12px 14px 6px}
+.brand{font-weight:700;font-size:15px}
+.tabs{margin-left:auto;display:flex;gap:3px;background:#E3E9EE;padding:3px;border-radius:11px}
+.tabs button{padding:6px 12px;border-radius:9px;font-size:14px;color:var(--soft)}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+main{flex:1;min-height:0;overflow-y:auto;padding:0 13px 18px}
+.view{display:none}.view.on{display:block}
+
+.task{background:var(--card);border-radius:15px;padding:12px 14px;box-shadow:var(--shadow);
+display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.task .big{flex:none;width:52px;height:52px;border-radius:50%;background:var(--green);
+color:#fff;display:grid;place-items:center;font-size:22px}
+.task .big:active{transform:scale(.94)}
+.task .txt{font-size:clamp(18px,4.4vw,24px);font-weight:600;line-height:1.25;flex:1}
+.task .txt.hidden{color:transparent;background:#E9EEF2;border-radius:7px;min-height:1.2em}
+.eye{flex:none;width:38px;height:38px;border-radius:50%;background:#EEF3F0;
+color:var(--green-d);display:grid;place-items:center;font-size:16px}
+.tip{font-size:12.5px;color:var(--soft);margin:-2px 2px 9px}
+
+.scene{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#DCE7F0}
+.scene img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ch{position:absolute;bottom:4%;transform:translateX(-50%)}
+.ch img{height:100%;display:block;pointer-events:none}
+.ch.flip img{transform:scaleX(-1)}
+.pt{position:absolute;transform:translate(-50%,-50%);border-radius:50%}
+.hot{width:20%;aspect-ratio:1}
+.ring{width:20%;aspect-ratio:1;border:5px solid var(--sun);
+box-shadow:0 0 0 3px rgba(255,255,255,.9),0 0 16px rgba(245,185,59,.75);
+animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.13)}}
+.obj{position:absolute;transform:translate(-50%,-50%);line-height:1;
+font-size:calc(var(--u,300px)*.17);filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+.obj.free{cursor:pointer}
+
+.pair{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:720px){.pair{grid-template-columns:1fr 1fr}}
+.opt{background:var(--card);border-radius:15px;padding:7px;box-shadow:var(--shadow);
+border:3px solid transparent;transition:border-color .15s}
+.opt.right{border-color:var(--green)}
+.opt.wrong{border-color:#CBD4DC;opacity:.5}
+.after{margin-top:11px;display:flex;gap:10px;align-items:center}
+.verdict{font-weight:600}.verdict.ok{color:var(--green-d)}
+.next{margin-left:auto;background:var(--green);color:#fff;padding:11px 20px;border-radius:12px;font-weight:600}
+
+/* ---- 词 ---- */
+.wcard{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:10px;
+display:grid;place-items:center;min-height:132px;position:relative}
+.wemoji{font-size:clamp(84px,26vw,140px);line-height:1}
+.wfig{position:relative;height:150px}
+.wfig img{height:100%;display:block}
+.wword{font-size:clamp(34px,9vw,52px);font-weight:700;letter-spacing:.01em}
+.wspk{position:absolute;right:12px;top:12px;width:38px;height:38px;border-radius:50%;
+background:#EEF3F0;color:var(--green-d);display:grid;place-items:center;font-size:16px}
+.bigbody{position:relative;background:var(--card);border-radius:16px;box-shadow:var(--shadow);
+margin-top:9px;padding:8px;display:grid;place-items:center}
+.bigbody .fig{position:relative;height:min(46vh,380px)}
+.bigbody .fig img{height:100%;display:block}
+.bigbody{padding:8px 74px}
+.bigbody .lead{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.bigbody .knob{position:absolute;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;
+border:3px solid var(--green);background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.14);
+display:grid;place-items:center;font-size:15px;color:var(--green-d);font-weight:700;cursor:pointer}
+.bigbody .knob.right{border-color:var(--sun);background:#FFF6E3}
+.bigbody .knob.wrong{opacity:.35}
+.wopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.wopt{background:var(--card);border:2px solid var(--line);border-radius:13px;padding:14px 10px;
+font-size:19px;font-weight:600;box-shadow:var(--shadow)}
+.wopt.pic{padding:4px;display:grid;place-items:center;min-height:118px;font-size:60px}
+.wopt.pic img{height:110px;display:block}
+.wopt.right{border-color:var(--green);background:#EDF6F1}
+.wopt.wrong{border-color:#CBD4DC;opacity:.45}
+
+.slots{display:flex;flex-wrap:wrap;gap:7px;margin:11px 0 3px}
+.slot{background:var(--card);border-radius:12px;padding:9px 13px;box-shadow:var(--shadow);
+font-size:18px;font-weight:600;display:flex;align-items:center;gap:7px}
+.slot small{font-size:10.5px;color:var(--soft);font-weight:400}
+.bank h3{font-size:11.5px;color:var(--soft);font-weight:600;margin:12px 0 6px;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:11px;padding:7px 12px;
+font-size:15px;font-weight:600}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff}
+.saybar{display:flex;gap:9px;margin-top:13px}
+.saybar button{flex:1;padding:13px;border-radius:12px;font-weight:600;font-size:16px}
+.saybar .read{background:var(--green);color:#fff}
+.saybar .did{background:#fff;border:2px solid var(--line)}
+.score{display:flex;gap:7px;margin-top:13px}
+.score div{flex:1;background:var(--card);border-radius:12px;padding:9px;text-align:center;box-shadow:var(--shadow)}
+.score b{display:block;font-size:19px}.score span{font-size:11px;color:var(--soft)}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">Say It</span><span style="font-size:10px;color:var(--soft)">v5</span><button id="gear" style="font-size:17px;opacity:.5">⚙</button>
+  <div class="tabs">
+    <button id="t-word" class="on">词</button>
+    <button id="t-listen">听</button>
+    <button id="t-read">读</button>
+    <button id="t-say">说</button>
+  </div>
+</header>
+
+<div id="settings" style="display:none;padding:10px 14px;background:#fff;
+border-bottom:1px solid var(--line);font-size:13px">
+  <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+    <span style="color:var(--soft);flex:none">声音</span>
+    <select id="voice" style="flex:1;font:inherit;padding:6px;border:1px solid var(--line);border-radius:8px"></select>
+  </div>
+  <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+    <span style="color:var(--soft);flex:none">DeepSeek key</span>
+    <input id="apikey" type="password" placeholder="sk-..." style="flex:1;font:inherit;padding:6px;
+      border:1px solid var(--line);border-radius:8px">
+  </div>
+  <div style="display:flex;align-items:center;gap:9px">
+    <span style="color:var(--soft);flex:none">语速</span>
+    <input id="rate" type="range" min="45" max="100" step="5" style="flex:1">
+    <b id="ratev" style="width:34px;text-align:right"></b>
+    <button id="try" style="padding:5px 11px;border:1px solid var(--line);border-radius:8px">试听</button>
+  </div>
+</div>
+<main>
+  <!-- ======== 词 ======== -->
+  <section class="view on" id="v-word">
+    <div class="tip" id="w-tip"></div>
+    <div class="wcard" id="w-card"><button class="wspk" id="w-spk">🔊</button></div>
+    <div class="bigbody" id="w-big" style="display:none"></div>
+    <div class="wopts" id="w-opts"></div>
+    <div class="after" id="w-after" style="display:none">
+      <span class="verdict" id="w-verdict"></span>
+      <button class="next" id="w-next">下一个</button>
+    </div>
+  </section>
+
+  <!-- ======== 听 ======== -->
+  <section class="view" id="v-listen">
+    <div class="task">
+      <button class="big" id="l-play">🔊</button>
+      <div class="txt hidden" id="l-txt"></div>
+      <button class="eye" id="l-eye">👁</button>
+    </div>
+    <div class="tip" id="l-tip"></div>
+    <div class="opt" style="border-color:transparent"><div class="scene" id="l-scene"></div></div>
+    <div class="after" id="l-after" style="display:none">
+      <span class="verdict" id="l-verdict"></span>
+      <button class="next" id="l-next">下一个</button>
+    </div>
+  </section>
+
+  <!-- ======== 读 ======== -->
+  <section class="view" id="v-read">
+    <div class="task"><div class="txt" id="r-txt"></div><button class="eye" id="r-say">🔊</button></div>
+    <div class="tip">哪张图是这句话说的？</div>
+    <div class="pair" id="r-pair"></div>
+    <div class="after" id="r-after" style="display:none">
+      <span class="verdict" id="r-verdict"></span>
+      <button class="next" id="r-next">下一题</button>
+    </div>
+  </section>
+
+  <!-- ======== 说 ======== -->
+  <section class="view" id="v-say">
+    <div class="tabs" style="margin:0 0 9px;width:fit-content">
+      <button id="m-free" class="on">自己搭</button>
+      <button id="m-zh">照中文说</button>
+    </div>
+    <div class="tip" id="s-tip"></div>
+    <div class="opt" style="border-color:transparent"><div class="scene" id="s-scene"></div></div>
+    <div class="slots" id="s-slots"></div>
+    <div class="saybar" id="s-bar"></div>
+    <div class="bank" id="s-bank"></div>
+  </section>
+
+  <div class="score">
+    <div><b id="sc-w">0</b><span>词掌握</span></div>
+    <div><b id="sc-l">0</b><span>听懂</span></div>
+    <div><b id="sc-r">0</b><span>认读</span></div>
+    <div><b id="sc-s">0</b><span>会说</span></div>
+  </div>
+</main>
+
+<script src="assets.js"></script>
+<script>
+window.onerror=function(m,src,l,c){
+  var d=document.createElement("div");
+  d.style.cssText="position:fixed;left:0;right:0;bottom:0;z-index:99;background:#B3261E;"+
+    "color:#fff;padding:10px 14px;font:12px/1.5 monospace;white-space:pre-wrap";
+  d.textContent="出错了 ("+l+":"+c+")\n"+m;
+  document.body.appendChild(d);
+};
+</script>
+<script>
+const ANCHORS = {"meimei": {"hair": [0.496, 0.096], "head": [0.496, 0.215], "eye": [0.524, 0.249], "ear": [0.395, 0.259], "nose": [0.548, 0.279], "mouth": [0.534, 0.31], "neck": [0.496, 0.358], "shoulder": [0.396, 0.391], "arm": [0.372, 0.469], "hand": [0.613, 0.599], "tummy": [0.478, 0.547], "back": [0.589, 0.51], "leg": [0.478, 0.721], "knee": [0.478, 0.819], "foot": [0.478, 0.983], "handSlot": [0.563, 0.611]}, "ani": {"hair": [0.522, 0.033], "head": [0.522, 0.215], "eye": [0.555, 0.267], "ear": [0.405, 0.282], "nose": [0.582, 0.312], "mouth": [0.566, 0.361], "neck": [0.522, 0.434], "shoulder": [0.42, 0.467], "arm": [0.396, 0.507], "hand": [0.66, 0.651], "tummy": [0.497, 0.547], "back": [0.61, 0.509], "leg": [0.497, 0.721], "knee": [0.497, 0.819], "foot": [0.497, 0.983], "handSlot": [0.609, 0.662]}, "xiaotao": {"hair": [0.499, 0.108], "head": [0.499, 0.228], "eye": [0.534, 0.262], "ear": [0.377, 0.272], "nose": [0.563, 0.292], "mouth": [0.545, 0.324], "neck": [0.499, 0.372], "shoulder": [0.399, 0.405], "arm": [0.375, 0.476], "hand": [0.66, 0.709], "tummy": [0.497, 0.547], "back": [0.609, 0.509], "leg": [0.497, 0.721], "knee": [0.497, 0.819], "foot": [0.497, 0.983], "handSlot": [0.61, 0.721]}, "eason": {"hair": [0.465, 0.129], "head": [0.465, 0.266], "eye": [0.496, 0.304], "ear": [0.356, 0.316], "nose": [0.522, 0.339], "mouth": [0.506, 0.375], "neck": [0.465, 0.43], "shoulder": [0.359, 0.462], "arm": [0.334, 0.509], "hand": [0.628, 0.668], "tummy": [0.472, 0.557], "back": [0.59, 0.52], "leg": [0.472, 0.727], "knee": [0.472, 0.823], "foot": [0.472, 0.983], "handSlot": [0.574, 0.679]}, "xinxin": {"hair": [0.511, 0.114], "head": [0.511, 0.243], "eye": [0.546, 0.279], "ear": [0.389, 0.29], "nose": [0.575, 0.312], "mouth": [0.558, 0.346], "neck": [0.511, 0.398], "shoulder": [0.417, 0.431], "arm": [0.395, 0.489], "hand": [0.621, 0.637], "tummy": [0.481, 0.546], "back": [0.585, 0.509], "leg": [0.481, 0.72], "knee": [0.481, 0.819], "foot": [0.481, 0.983], "handSlot": [0.573, 0.648]}, "ashan": {"eye": [0.718, 0.571], "mouth": [0.742, 0.68], "tail": [0.146, 0.41], "fin": [0.46, 0.831], "back": [0.5, 0.393], "handSlot": [0.838, 0.713]}};
+const IMG = window.__IMG__;
+const src = b64 => b64 ? ("data:image/webp;base64," + b64) : "";
+if(!IMG || !IMG.ch || !IMG.bg){
+  document.addEventListener("DOMContentLoaded",()=>{
+    const d=document.createElement("div");
+    d.style.cssText="position:fixed;inset:0;z-index:99;background:#fff;padding:28px;"+
+      "font:15px/1.7 -apple-system,PingFang SC,sans-serif;color:#1B2733";
+    d.innerHTML="<b>图片没加载到</b><br><br>这是分文件版，index.html 需要和 assets.js "+
+      "放在同一个目录，而且要通过网址打开（GitHub Pages 或本地服务器）。<br><br>"+
+      "本地直接点开文件的话，请用单文件版 <b>say-it.html</b>。";
+    document.body.appendChild(d);
+  });
+  throw new Error("assets missing");
+}
+
+const CHARS={
+ xiaotao:{scale:0.76,kind:"human",person:1,
+          pron:{subj:"I",   obj:"me",   poss:"my"},   be:"am", s3:false, zh:{s:"我",o:"我",p:"我的"}},
+ meimei :{scale:1.00,kind:"human",person:3,
+          pron:{subj:"he",  obj:"him",  poss:"his"},  be:"is",  s3:true,  zh:{s:"他",o:"他",p:"他的"}},
+ ani    :{scale:0.97,kind:"human",person:3,
+          pron:{subj:"she", obj:"her",  poss:"her"},  be:"is",  s3:true,  zh:{s:"她",o:"她",p:"她的"}},
+ ashan  :{scale:0.62,kind:"animal",person:3,
+          pron:{subj:"it",  obj:"it",   poss:"its"},  be:"is",  s3:true,  zh:{s:"它",o:"它",p:"它的"}},
+ eason  :{scale:0.75,kind:"human",person:3,name:true,
+          pron:{subj:"Eason", obj:"Eason", poss:"Eason's"}, be:"is", s3:true,
+          zh:{s:"Eason",o:"Eason",p:"Eason的"}},
+ xinxin :{scale:0.73,kind:"human",person:3,name:true,
+          pron:{subj:"Xinxin",obj:"Xinxin",poss:"Xinxin's"},be:"is", s3:true,
+          zh:{s:"心心",o:"心心",p:"心心的"}}};
+/* "you" 借用一个角色的形象，头上挂 👉 */
+const YOU={scale:0.75,kind:"human",person:2,avatar:"eason",
+           pron:{subj:"you",obj:"you",poss:"your"},be:"are",s3:false,
+           zh:{s:"你",o:"你",p:"你的"}};
+const A=id=>id==="you"?YOU:CHARS[id];
+const sprite=id=>id==="you"?YOU.avatar:id;
+const subjWord=id=>{const c=A(id);return c.name?c.pron.subj:cap(c.pron.subj);};
+const POSE={neutral:"01",give:"02",receive:"03",point:"04",run:"05",
+            sit:"06",hold:"07",kick:"08",eat:"09",like:"10",
+            jump:"11",walk:"12",throw:"13",drink:"14",read:"15",
+            sleep:"16",wash:"17",wave:"18",
+            happy:"21",sad:"22",angry:"23",tired:"24"};
+const RAY={neutral:"01",swim:"02",like:"03",eat:"04",
+           happy:"21",sad:"22",angry:"23",tired:"24"};
+const HANDS = {"eason": {"21": [0.299, 0.474], "22": [0.359, 0.855], "23": [0.376, 0.851], "24": [0.352, 0.859], "11": [0.731, 0.836], "12": [0.323, 0.647], "13": [0.304, 0.838], "14": [0.418, 0.66], "15": [0.342, 0.839], "16": [0.681, 0.829], "17": [0.368, 0.84], "18": [0.761, 0.641], "01": [0.628, 0.668], "02": [0.367, 0.846], "03": [0.595, 0.835], "04": [0.409, 0.83], "05": [0.275, 0.799], "06": [0.396, 0.85], "07": [0.622, 0.818], "08": [0.275, 0.531], "09": [0.59, 0.836], "10": [0.436, 0.82]}, "xinxin": {"21": [0.22, 0.419], "22": [0.384, 0.826], "23": [0.64, 0.614], "24": [0.664, 0.463], "11": [0.556, 0.915], "12": [0.739, 0.58], "13": [0.375, 0.81], "14": [0.646, 0.811], "15": [0.662, 0.521], "16": [0.522, 0.801], "17": [0.531, 0.809], "18": [0.283, 0.62], "01": [0.621, 0.637], "02": [0.396, 0.836], "03": [0.605, 0.823], "04": [0.357, 0.654], "05": [0.673, 0.535], "06": [0.657, 0.881], "07": [0.551, 0.819], "08": [0.235, 0.561], "09": [0.694, 0.519], "10": [0.57, 0.831]}, "xiaotao": {"22": [0.343, 0.721], "23": [0.323, 0.704], "24": [0.337, 0.732], "12": [0.295, 0.668], "13": [0.919, 0.437], "14": [0.304, 0.625], "15": [0.68, 0.476], "16": [0.486, 0.404], "17": [0.565, 0.559], "18": [0.805, 0.646], "01": [0.66, 0.709], "02": [0.834, 0.476], "03": [0.59, 0.484], "04": [0.331, 0.716], "05": [0.674, 0.521], "06": [0.633, 0.825], "07": [0.687, 0.466], "08": [0.174, 0.566], "09": [0.413, 0.718], "10": [0.631, 0.423]}, "ani": {"21": [0.291, 0.426], "22": [0.511, 0.948], "23": [0.627, 0.942], "24": [0.315, 0.638], "11": [0.274, 0.861], "12": [0.359, 0.89], "13": [0.741, 0.954], "14": [0.423, 0.964], "15": [0.709, 0.494], "16": [0.557, 0.746], "17": [0.634, 0.936], "18": [0.791, 0.617], "01": [0.66, 0.651], "02": [0.465, 0.759], "03": [0.663, 0.491], "04": [0.385, 0.654], "05": [0.605, 0.927], "06": [0.593, 0.885], "07": [0.647, 0.519], "08": [0.934, 0.757], "09": [0.407, 0.681], "10": [0.552, 0.771]}, "meimei": {"21": [0.307, 0.476], "22": [0.327, 0.639], "23": [0.29, 0.608], "24": [0.311, 0.636], "12": [0.325, 0.598], "13": [0.245, 0.418], "14": [0.39, 0.629], "15": [0.688, 0.481], "16": [0.578, 0.438], "17": [0.521, 0.527], "18": [0.263, 0.618], "01": [0.613, 0.599], "02": [0.787, 0.48], "03": [0.665, 0.512], "04": [0.375, 0.608], "05": [0.69, 0.476], "06": [0.421, 0.809], "07": [0.7, 0.424], "08": [0.228, 0.516], "09": [0.372, 0.609], "10": [0.639, 0.434]}, "ashan": {"21": [0.699, 0.56], "22": [0.724, 0.613], "23": [0.703, 0.603], "24": [0.71, 0.66], "01": [0.562, 0.778], "02": [0.871, 0.534], "03": [0.632, 0.755], "04": [0.859, 0.592]}};
+const HUMANS=["meimei","ani","eason","xinxin"];   // 判定题只用第三人称
+const ALLCH=["meimei","ani","xiaotao","eason","xinxin"];
+const BG=["classroom","kitchen","park","playground"];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+
+/* ---------------- 词库 ---------------- */
+const NOUNS={
+ apple:{e:"🍎",z:"苹果",t:["food","hold","small"]},
+ banana:{e:"🍌",z:"香蕉",t:["food","hold"]},
+ bread:{e:"🍞",z:"面包",t:["food","hold"]},
+ milk:{e:"🥛",z:"牛奶",t:["drink","hold"]},
+ cake:{e:"🍰",z:"蛋糕",t:["food","hold"]},
+ egg:{e:"🥚",z:"鸡蛋",t:["food","hold","small"]},
+ rice:{e:"🍚",z:"米饭",t:["food"]},
+ orange:{e:"🍊",z:"橙子",t:["food","hold","small"]},
+ water:{e:"💧",z:"水",t:["drink"]},
+ ice_cream:{e:"🍦",z:"冰淇淋",t:["food","hold"]},
+ ball:{e:"⚽",z:"球",t:["hold","kick","throw","toy"]},
+ book:{e:"📕",z:"书",t:["hold","read","school"]},
+ pencil:{e:"✏️",z:"铅笔",t:["hold","school","small"]},
+ eraser:{e:"🧽",z:"橡皮",t:["hold","school","small"]},
+ ruler:{e:"📏",z:"尺子",t:["hold","school"]},
+ bag:{e:"🎒",z:"书包",t:["hold","school","wear"]},
+ cup:{e:"🥤",z:"杯子",t:["hold","drink"]},
+ scissors:{e:"✂️",z:"剪刀",t:["hold","school"]},
+ crayon:{e:"🖍️",z:"蜡笔",t:["hold","school","small"]},
+ clock:{e:"🕐",z:"钟",t:["look"]},
+ cat:{e:"🐱",z:"猫",t:["animal"]},
+ dog:{e:"🐶",z:"狗",t:["animal"]},
+ fish:{e:"🐟",z:"鱼",t:["animal","food"]},
+ bird:{e:"🐦",z:"鸟",t:["animal"]},
+ tree:{e:"🌳",z:"树",t:["look"]},
+ flower:{e:"🌻",z:"花",t:["hold","look"]},
+ shoe:{e:"👟",z:"鞋",t:["hold","wear"]},
+ hat:{e:"🧢",z:"帽子",t:["hold","wear"]},
+ shirt:{e:"👕",z:"衣服",t:["wear"]},
+ car:{e:"🚗",z:"小汽车",t:["toy","look"]},
+ bus:{e:"🚌",z:"公交车",t:["look"]},
+ bike:{e:"🚲",z:"自行车",t:["look"]},
+ chair:{e:"🪑",z:"椅子",t:["look"]},
+ table:{e:"🛏️",z:"桌子",t:["look"]},
+ door:{e:"🚪",z:"门",t:["look"]},
+ sun:{e:"☀️",z:"太阳",t:["look"]}};
+const EMO=k=>NOUNS[k].e;
+const VERBS_W={run:"run",sit:"sit",kick:"kick",eat:"eat",point:"point",
+               give:"give",hold:"hold",like:"like"};
+const BODY_W=["hand","knee","foot","ear","nose","hair","eye","mouth"];
+const EMO_W={happy:"开心",sad:"难过",angry:"生气",tired:"累"};
+
+const label=k=>k.replace(/_/g," ");
+const ZH_EXTRA={run:"跑",sit:"坐",kick:"踢",eat:"吃",point:"指",give:"给",hold:"拿着",like:"喜欢",
+hand:"手",knee:"膝盖",foot:"脚",ear:"耳朵",nose:"鼻子",hair:"头发",eye:"眼睛",mouth:"嘴巴"};
+const ZH=new Proxy({},{get:(_,k)=>(NOUNS[k]&&NOUNS[k].z)||ZH_EXTRA[k]||EMO_W[k]});
+const WORDS=[
+ ...Object.keys(NOUNS).map(k=>({k,type:"noun"})),
+ ...Object.keys(VERBS_W).map(k=>({k,type:"verb"})),
+ ...BODY_W.map(k=>({k,type:"body"})),
+ ...Object.keys(EMO_W).map(k=>({k,type:"emo"}))];
+
+/* ---------------- 发音 ---------------- */
+const Say=(()=>{
+ let list=[],v=null,rate=0.72;
+ const load=()=>{ if(!("speechSynthesis" in window))return;
+  list=speechSynthesis.getVoices().filter(x=>/^en/i.test(x.lang));
+  if(!v) v=list.find(x=>/^en-US/i.test(x.lang)&&/natural|enhanced|premium|google/i.test(x.name))
+        ||list.find(x=>/^en-US/i.test(x.lang))||list[0]||null;
+  if(typeof onVoices==="function") onVoices(); };
+ if("speechSynthesis" in window){load();speechSynthesis.onvoiceschanged=load;}
+ const f=(t,r)=>{ if(!("speechSynthesis" in window))return;
+  try{ speechSynthesis.cancel();
+   const u=new SpeechSynthesisUtterance(t);
+   if(v)u.voice=v; u.lang=v?v.lang:"en-US"; u.rate=r||rate; u.pitch=1.03; u.volume=1;
+   speechSynthesis.speak(u);
+  }catch(e){} };
+ f.stop=()=>{try{speechSynthesis.cancel();}catch(e){}};
+ f.voices=()=>list;
+ f.pickVoice=n=>{ v=list.find(x=>x.name===n)||v; };
+ f.current=()=>v?v.name:"";
+ f.setRate=r=>{rate=r;};
+ f.rate=()=>rate;
+ return f;})();
+
+/* ---------------- 进度 ---------------- */
+const $=id=>document.getElementById(id);
+let DB={l:0,r:0,s:0,w:{}};
+try{Object.assign(DB,JSON.parse(localStorage.getItem("sayit.v3")||"{}"));}catch(e){}
+if(!DB.w)DB.w={};
+const save=()=>{try{localStorage.setItem("sayit.v3",JSON.stringify(DB));}catch(e){}};
+function paint(){
+  $("sc-l").textContent=DB.l; $("sc-r").textContent=DB.r; $("sc-s").textContent=DB.s;
+  $("sc-w").textContent=Object.values(DB.w).filter(x=>x>=2).length;
+}
+const bump=k=>{DB[k]++;save();paint();};
+
+/* ---------------- 场景 ---------------- */
+function poseImg(cid,p){const m=A(cid).kind==="animal"?RAY:POSE;
+  const set=(IMG.ch||{})[sprite(cid)]||{};
+  return src(set[m[p]||m.neutral]||set["01"]);}
+const RO = ("ResizeObserver" in window) ? new ResizeObserver(es=>{
+  es.forEach(e=>{ const h=e.contentRect.height; if(h) e.target.style.setProperty("--u",h+"px"); });
+}) : null;
+function watch(el){ if(RO) RO.observe(el); if(el.clientHeight) el.style.setProperty("--u",el.clientHeight+"px"); }
+function setBG(scene,bg){scene.innerHTML=""; watch(scene);
+  if(!IMG.bg||!IMG.bg[bg]) return;
+  const i=document.createElement("img");i.className="bg";i.src=src(IMG.bg[bg]);scene.appendChild(i);}
+function addChar(scene,cid,pose,x,flip){
+  const w=document.createElement("div");
+  w.className="ch"+(flip?" flip":"");
+  w.style.height=(A(cid).scale*84)+"%"; w.style.left=x+"%";
+  const img=document.createElement("img"); img.src=poseImg(cid,pose);
+  w.appendChild(img); scene.appendChild(w); return w;}
+function at(w,cid,part){const a=(ANCHORS[sprite(cid)]||{})[part];if(!a)return null;
+  return [(w.classList.contains("flip")?1-a[0]:a[0])*100, a[1]*100];}
+function pin(w,cid,part,cls){const p=at(w,cid,part);if(!p)return null;
+  const d=document.createElement("div");d.className="pt "+cls;
+  d.style.left=p[0]+"%";d.style.top=p[1]+"%";w.appendChild(d);return d;}
+function hold(w,cid,emoji,pose){
+  let p=null;
+  const key=(A(cid).kind==="animal"?RAY:POSE)[pose];
+  const h=key && (HANDS[sprite(cid)]||{})[key];
+  if(h) p=[(w.classList.contains("flip")?1-h[0]:h[0])*100, h[1]*100];
+  else p=at(w,cid,"handSlot");
+  if(!p)return;
+  const d=document.createElement("div");d.className="obj";d.textContent=emoji;
+  d.style.left=p[0]+"%";d.style.top=p[1]+"%";w.appendChild(d);}
+
+/* =====================================================================
+   词
+   ===================================================================== */
+let W=null;
+function wordFigure(item,h){
+  if(item.type==="emo"){
+    const b=document.createElement("div"); b.className="wfig"; b.style.height="230px";
+    const im=document.createElement("img"); im.src=poseImg((W&&W.cid)||"meimei",item.k);
+    b.appendChild(im); return b;
+  }
+  // 动词用角色姿势，身体部位用角色+高亮环，名词用 emoji
+  const box=document.createElement("div");
+  if(item.type==="noun"){ box.className="wemoji"; box.textContent=EMO(item.k); return box; }
+  const cid=item.type==="body" ? (W&&W.cid||"meimei") : "meimei";
+  box.className="wfig";
+  const img=document.createElement("img");
+  img.src=poseImg(cid, item.type==="verb" ? item.k : "neutral");
+  box.appendChild(img);
+  if(item.type==="body"){
+    const a=ANCHORS[cid][item.k];
+    if(a){ const d=document.createElement("div");
+      d.className="pt ring"; d.style.left=a[0]*100+"%"; d.style.top=a[1]*100+"%";
+      d.style.width="26%"; box.appendChild(d); }
+  }
+  return box;
+}
+function newWord(){
+  Say.stop(); $("w-after").style.display="none";
+  const pool=WORDS.filter(w=>(DB.w[w.k]||0)<2);
+  const item=rnd(pool.length?pool:WORDS);
+  W={item,cid:rnd(ALLCH)};
+  const card=$("w-card"), opts=$("w-opts"), big=$("w-big");
+  card.innerHTML='<button class="wspk" id="w-spk">🔊</button>';
+  opts.innerHTML=""; big.innerHTML=""; big.style.display="none"; opts.style.display="grid";
+
+  // 身体部位：一张大图，引线指到两侧的小圈上，不遮住人
+  if(item.type==="body"){
+    $("w-tip").textContent="点出这个部位";
+    const t=document.createElement("div"); t.className="wword"; t.textContent=label(item.k);
+    card.appendChild(t);
+    opts.style.display="none"; big.style.display="grid";
+    const fig=document.createElement("div"); fig.className="fig";
+    const img=document.createElement("img"); img.src=poseImg(W.cid,"neutral");
+    fig.appendChild(img); big.appendChild(fig);
+
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("class","lead"); svg.setAttribute("viewBox","0 0 100 100");
+    svg.setAttribute("preserveAspectRatio","none"); fig.appendChild(svg);
+
+    const cands=shuffle(BODY_W.filter(p=>ANCHORS[W.cid][p])).slice(0,5);
+    const L=[],R=[];
+    cands.forEach(p=>{ (ANCHORS[W.cid][p][0]<0.5 ? L : R).push(p); });
+    const lay=(arr,side)=>arr.forEach((p,i)=>{
+      const a=ANCHORS[W.cid][p];
+      const ky = arr.length===1 ? a[1] : (0.16 + i*(0.68/Math.max(1,arr.length-1)));
+      const kx = side<0 ? -0.30 : 1.30;
+      const ln=document.createElementNS("http://www.w3.org/2000/svg","line");
+      ln.setAttribute("x1",a[0]*100); ln.setAttribute("y1",a[1]*100);
+      ln.setAttribute("x2",kx*100);   ln.setAttribute("y2",ky*100);
+      ln.setAttribute("stroke","#2F8F5B"); ln.setAttribute("stroke-width","0.7");
+      ln.setAttribute("vector-effect","non-scaling-stroke");
+      ln.setAttribute("stroke-dasharray","3 3"); svg.appendChild(ln);
+      const dot=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      dot.setAttribute("cx",a[0]*100); dot.setAttribute("cy",a[1]*100);
+      dot.setAttribute("r","1.4"); dot.setAttribute("fill","#2F8F5B"); svg.appendChild(dot);
+      const k=document.createElement("button");
+      k.className="knob"; k.textContent="?";
+      k.style.left=kx*100+"%"; k.style.top=ky*100+"%";
+      k.dataset.part=p;
+      k.onclick=()=>{
+        [...fig.querySelectorAll(".knob")].forEach(o=>{
+          o.onclick=null;
+          o.classList.add(o.dataset.part===item.k?"right":"wrong");
+          if(o.dataset.part===item.k) o.textContent="✓";
+        });
+        wJudge(null,p===item.k,null,null);
+      };
+      fig.appendChild(k);
+    });
+    lay(L,-1); lay(R,1);
+    setTimeout(()=>Say(label(item.k)),200);
+    $("w-spk").onclick=e=>{e.stopPropagation();Say(label(item.k));};
+    return;
+  }
+
+  const mode = item.type==="emo" ? "pic2word" : (Math.random()<0.5?"pic2word":"word2pic");
+  const others=shuffle(WORDS.filter(w=>w.type===item.type&&w.k!==item.k)).slice(0,3);
+  const all=shuffle([item,...others]);
+
+  if(mode==="pic2word"){
+    $("w-tip").textContent="这是什么？";
+    card.appendChild(wordFigure(item));
+    all.forEach(o=>{
+      const b=document.createElement("button");
+      b.className="wopt"; b.textContent=label(o.k);
+      b.onclick=()=>wJudge(b,o.k===item.k,all,opts);
+      opts.appendChild(b);
+    });
+  }else{
+    $("w-tip").textContent="哪一个是这个词？";
+    const t=document.createElement("div"); t.className="wword"; t.textContent=label(item.k);
+    card.appendChild(t);
+    all.forEach(o=>{
+      const b=document.createElement("button"); b.className="wopt pic";
+      b.appendChild(wordFigure(o));
+      b.onclick=()=>wJudge(b,o.k===item.k,all,opts);
+      opts.appendChild(b);
+    });
+  }
+  setTimeout(()=>Say(label(item.k)),200);
+  $("w-spk").onclick=e=>{e.stopPropagation();Say(label(item.k));};
+}
+function wJudge(btn,ok,all,opts){
+  if($("w-after").style.display==="flex")return;
+  if(opts) [...opts.querySelectorAll("button,.hot")].forEach(b=>b.onclick=null);
+  if(btn) btn.classList.add(ok?"right":"wrong");
+
+  const k=W.item.k;
+  DB.w[k]=ok ? (DB.w[k]||0)+1 : 0;
+  save(); paint();
+  const v=$("w-verdict");
+  const zh = ZH[k] ? "（"+ZH[k]+"）" : "";
+  v.textContent = (ok ? "对了　" : "再听一遍　") + label(k) + zh;
+  v.className = "verdict" + (ok?" ok":"");
+  $("w-after").style.display="flex";
+  Say(label(k));
+}
+$("w-next").onclick=newWord;
+
+/* =====================================================================
+   听
+   ===================================================================== */
+let L=null;
+function newListen(){
+  Say.stop(); $("l-after").style.display="none"; $("l-txt").classList.add("hidden");
+  const scene=$("l-scene"), kind=rnd(["find","touch","give"]); setBG(scene,rnd(BG));
+
+  if(kind==="find"){
+    const keys=shuffle(Object.keys(NOUNS)).slice(0,3), target=rnd(keys);
+    L={text:`Find the ${label(target)}.`,tip:"点一下听到的东西"};
+    keys.forEach((k,i)=>{
+      const d=document.createElement("div");
+      d.className="obj free"; d.textContent=EMO(k);
+      d.style.left=(22+i*28)+"%"; d.style.top="55%"; d.style.fontSize="15vmin";
+      d.onclick=()=>lDone(k===target); scene.appendChild(d);
+    });
+  }
+  if(kind==="touch"){
+    let a=rnd(HUMANS),b=rnd(HUMANS);
+    while(b===a||A(a).pron.poss===A(b).pron.poss) b=rnd(HUMANS);
+    const part=rnd(BODY_W.filter(p=>ANCHORS[a][p]&&ANCHORS[b][p]));
+    L={text:`Touch ${A(a).pron.poss} ${part}.`,tip:"点一下那个人的那个部位"};
+    [[a,32,false],[b,68,true]].forEach(([cid,x,fl])=>{
+      const w=addChar(scene,cid,"neutral",x,fl);
+      const h=pin(w,cid,part,"hot"); if(h)h.onclick=()=>lDone(cid===a);
+    });
+  }
+  if(kind==="give"){
+    let a=rnd(HUMANS),b=rnd(HUMANS);
+    while(b===a||A(a).pron.obj===A(b).pron.obj) b=rnd(HUMANS);
+    const o=rnd(objsFor("give"));
+    L={text:`Give ${A(a).pron.obj} the ${label(o)}.`,tip:"点一下要把东西给的那个人"};
+    const g=addChar(scene,"xiaotao","give",50,false); hold(g,"xiaotao",EMO(o),"give");
+    [[a,17,false],[b,83,true]].forEach(([cid,x,fl])=>{
+      const w=addChar(scene,cid,"receive",x,fl); w.onclick=()=>lDone(cid===a);
+    });
+  }
+  $("l-txt").textContent=L.text; $("l-tip").textContent=L.tip;
+  setTimeout(()=>Say(L.text),260);
+}
+function lDone(ok){
+  if($("l-after").style.display==="flex")return;
+  const v=$("l-verdict");
+  if(ok){v.textContent="对了";v.className="verdict ok";bump("l");}
+  else{v.textContent="再听一次";v.className="verdict";setTimeout(()=>Say(L.text),200);}
+  $("l-after").style.display="flex";
+}
+$("l-play").onclick=()=>L&&Say(L.text);
+$("l-eye").onclick=()=>$("l-txt").classList.toggle("hidden");
+$("l-next").onclick=newListen;
+
+/* =====================================================================
+   读
+   ===================================================================== */
+let R=null,ANS=false;
+function pairDiff(f){let a,b,g=0;
+  do{a=rnd(HUMANS);b=rnd(HUMANS.concat("ashan"));g++;}
+  while((a===b||A(a).pron[f]===A(b).pron[f])&&g<300);return [a,b];}
+function fTransfer(){
+  const [a,b]=pairDiff("subj"),o=rnd(objsFor("give")),bg=rnd(BG);
+  const sc=(g,t)=>({bg,hold:{on:g,emoji:EMO(o)},
+    chars:[{id:g,pose:"give",x:30},{id:t,pose:"receive",x:70,flip:true}]});
+  return {sentence:`${subjWord(a)} gives ${A(b).pron.obj} the ${label(o)}.`,
+          right:sc(a,b),wrong:sc(b,a),note:"谁在给、谁在接"};}
+function fGender(){
+  const [a,b]=pairDiff("subj"),bg=rnd(BG);
+  let [pose,ing]=rnd([["run","running"],["sit","sitting"],["kick","kicking"],["point","pointing"]]);
+  if(A(a).kind==="animal"||A(b).kind==="animal"){pose="neutral";ing="smiling";}
+  return {sentence:`${subjWord(a)} ${A(a).be} ${ing}.`,
+          right:{bg,chars:[{id:a,pose,x:50}]},wrong:{bg,chars:[{id:b,pose,x:50}]},note:"是谁"};}
+function fPoss(){
+  const [a,b]=pairDiff("poss"),bg=rnd(BG);
+  const part=rnd(BODY_W.filter(p=>ANCHORS[a][p]&&ANCHORS[b][p]));
+  const base={bg,chars:[{id:a,pose:"neutral",x:32},{id:b,pose:"neutral",x:68,flip:true}]};
+  return {sentence:`It is ${A(a).pron.poss} ${part}.`,
+          right:Object.assign({},base,{ring:{on:a,part}}),
+          wrong:Object.assign({},base,{ring:{on:b,part}}),note:"是谁的"};}
+function draw(el,spec){
+  setBG(el,spec.bg); const w={};
+  spec.chars.forEach(c=>{w[c.id]=addChar(el,c.id,c.pose,c.x,!!c.flip);});
+  if(spec.hold) hold(w[spec.hold.on],spec.hold.on,spec.hold.emoji,spec.hold.pose||"give");
+  if(spec.ring) pin(w[spec.ring.on],spec.ring.on,spec.ring.part,"ring");}
+function newRead(){
+  Say.stop(); ANS=false; R=rnd([fTransfer,fGender,fPoss])();
+  $("r-txt").textContent=R.sentence; $("r-after").style.display="none";
+  const pair=$("r-pair"); pair.innerHTML="";
+  shuffle(["right","wrong"]).forEach(k=>{
+    const box=document.createElement("div"); box.className="opt"; box.dataset.k=k;
+    const sc=document.createElement("div"); sc.className="scene";
+    box.appendChild(sc); pair.appendChild(box); draw(sc,R[k]);
+    box.onclick=()=>{ if(ANS)return; ANS=true;
+      [...pair.children].forEach(b=>b.classList.add(b.dataset.k==="right"?"right":"wrong"));
+      const v=$("r-verdict");
+      if(k==="right"){v.textContent="对了";v.className="verdict ok";bump("r");}
+      else{v.textContent="再看看："+R.note;v.className="verdict";}
+      $("r-after").style.display="flex"; };
+  });}
+$("r-say").onclick=()=>R&&Say(R.sentence);
+$("r-next").onclick=newRead;
+
+/* =====================================================================
+   说：自己搭 / 照中文说
+   ===================================================================== */
+const SAY_VERBS={
+  give :{base:"give", s:"gives", pose:"give", zh:"给",   recip:true,  need:["hold"]},
+  kick :{base:"kick", s:"kicks", pose:"kick", zh:"踢",   recip:false, need:["kick"]},
+  eat  :{base:"eat",  s:"eats",  pose:"eat",  zh:"吃",   recip:false, need:["food"]},
+  drink:{base:"drink",s:"drinks",pose:"eat",  zh:"喝",   recip:false, need:["drink"]},
+  hold :{base:"hold", s:"holds", pose:"hold", zh:"拿着", recip:false, need:["hold"]},
+  like :{base:"like", s:"likes", pose:"like", zh:"喜欢", recip:false, need:null},
+  throw:{base:"throw",s:"throws",pose:"throw",zh:"扔",   recip:false, need:["throw"]},
+  read :{base:"read", s:"reads", pose:"read", zh:"读",   recip:false, need:["read"]},
+  wear :{base:"wear", s:"wears", pose:"hold", zh:"穿",   recip:false, need:["wear"]},
+  jump :{base:"jump", s:"jumps", pose:"jump", zh:"跳",   recip:false, need:null, noObj:true},
+  walk :{base:"walk", s:"walks", pose:"walk", zh:"走",   recip:false, need:null, noObj:true},
+  sleep:{base:"sleep",s:"sleeps",pose:"sleep",zh:"睡觉", recip:false, need:null, noObj:true},
+  wave :{base:"wave", s:"waves", pose:"wave", zh:"挥手", recip:false, need:null, noObj:true}
+};
+const okObj=(v,o)=>{const V=SAY_VERBS[v]; if(V.noObj) return true;
+  return !V.need || V.need.some(t=>NOUNS[o].t.includes(t));};
+const objsFor=v=>Object.keys(NOUNS).filter(o=>okObj(v,o));
+const vForm=(v,id)=>A(id).s3 ? SAY_VERBS[v].s : SAY_VERBS[v].base;
+
+const ACTORS=["xiaotao","you","meimei","ani","eason","xinxin","ashan"];
+const NAME={xiaotao:"小萄",you:"你",meimei:"梅梅",ani:"阿妮",eason:"Eason",xinxin:"心心",ashan:"阿扇"};
+let SMODE="free";
+let F={bg:"classroom",subj:"ani",verb:"give",recip:"meimei",obj:"ball"};
+
+function engOf(st){
+  const v=SAY_VERBS[st.verb], sw=subjWord(st.subj), vf=vForm(st.verb,st.subj);
+  if(v.noObj) return `${sw} ${vf}.`;
+  if(v.recip) return `${sw} ${vf} ${A(st.recip).pron.obj} the ${label(st.obj)}.`;
+  if(st.verb==="like") return `${sw} ${vf} ${label(st.obj)}s.`;
+  return `${sw} ${vf} the ${label(st.obj)}.`;
+}
+function zhOf(st){
+  const v=SAY_VERBS[st.verb], sw=A(st.subj).zh.s, o=ZH[st.obj]||st.obj;
+  if(v.noObj) return `${sw}${v.zh}。`;
+  if(v.recip) return `${sw}把${o}给${A(st.recip).zh.o}。`;
+  return `${sw}${v.zh}${o}。`;
+}
+function tagPerson(wrap,id){
+  const p=A(id).person; if(p===3) return;
+  const d=document.createElement("div");
+  d.className="obj"; d.textContent = p===1 ? "💬" : "👉";
+  d.style.left="50%"; d.style.top="-6%"; wrap.appendChild(d);
+}
+function drawState(st){
+  const scene=$("s-scene"); setBG(scene,st.bg);
+  const v=SAY_VERBS[st.verb];
+  if(v.recip){
+    const g=addChar(scene,st.subj,"give",30,false); hold(g,st.subj,EMO(st.obj),"give"); tagPerson(g,st.subj);
+    const r=addChar(scene,st.recip,"receive",70,true); tagPerson(r,st.recip);
+  }else{
+    const g=addChar(scene,st.subj,v.pose,50,false); hold(g,st.subj,EMO(st.obj),"give"); tagPerson(g,st.subj);
+  }
+}
+function chipRow(host,title,items,cur,set){
+  const h=document.createElement("h3"); h.textContent=title; host.appendChild(h);
+  const row=document.createElement("div"); row.className="chips";
+  items.forEach(([val,lab])=>{
+    const c=document.createElement("button");
+    c.className="chip"+(val===cur?" on":""); c.innerHTML=lab;
+    c.onclick=()=>{set(val);renderSay();}; row.appendChild(c);
+  });
+  host.appendChild(row);
+}
+
+/* ---------- 自己搭 ---------- */
+function renderFree(){
+  $("s-tip").textContent="随便换，画面跟着变";
+  drawState(F);
+  const v=SAY_VERBS[F.verb];
+  const slots=$("s-slots"); slots.innerHTML="";
+  const eng=engOf(F).replace(/\.$/,"").split(" ");
+  eng.forEach(w=>{ const d=document.createElement("div"); d.className="slot";
+    d.textContent=w; d.onclick=()=>Say(w); slots.appendChild(d); });
+
+  const bar=$("s-bar"); bar.innerHTML="";
+  const b1=document.createElement("button"); b1.className="read"; b1.textContent="🔊 听一遍";
+  b1.onclick=()=>Say(engOf(F));
+  const b2=document.createElement("button"); b2.className="did"; b2.textContent="我说出来了";
+  b2.onclick=()=>{bump("s");Say(engOf(F));};
+  bar.appendChild(b1); bar.appendChild(b2);
+
+  const bank=$("s-bank"); bank.innerHTML="";
+  const box=document.createElement("div");
+  box.style.cssText="display:flex;gap:7px;margin:4px 0 2px";
+  box.innerHTML='<input id="ai-in" placeholder="用中文说一句，比如：妈妈把苹果给我" '+
+    'style="flex:1;font:inherit;padding:9px 11px;border:2px solid var(--line);border-radius:11px">'+
+    '<button id="ai-go" class="chip" style="white-space:nowrap">去</button>';
+  bank.appendChild(box);
+  const msg=document.createElement("div");
+  msg.style.cssText="font-size:12px;color:var(--soft);margin:5px 2px 0"; msg.id="ai-msg";
+  bank.appendChild(msg);
+  setTimeout(()=>{
+    const go=$("ai-go"); if(!go) return;
+    go.onclick=async()=>{
+      const t=$("ai-in").value.trim(); if(!t) return;
+      $("ai-msg").textContent="在想…";
+      const r=await aiScene(t);
+      if(r.err){ $("ai-msg").textContent=r.err; return; }
+      F=r; renderFree(); Say(engOf(F));
+    };
+  },0);
+  chipRow(bank,"在哪里",[["classroom","教室"],["kitchen","厨房"],["park","公园"],["playground","操场"]],
+          F.bg,x=>F.bg=x);
+  chipRow(bank,"谁",ACTORS.map(a=>[a,NAME[a]+" <small>"+subjWord(a)+"</small>"]),
+          F.subj,x=>{F.subj=x; if(F.recip===x)F.recip=ACTORS.find(y=>y!==x);});
+  chipRow(bank,"做什么",Object.keys(SAY_VERBS).map(k=>[k,vForm(k,F.subj)]),F.verb,
+          x=>{F.verb=x; if(!okObj(x,F.obj)) F.obj=objsFor(x)[0];});
+  if(v.recip)
+    chipRow(bank,"给谁",ACTORS.filter(a=>a!==F.subj)
+            .map(a=>[a,NAME[a]+" <small>"+A(a).pron.obj+"</small>"]),F.recip,x=>F.recip=x);
+  if(!v.noObj) chipRow(bank,"什么",objsFor(F.verb).map(k=>[k,EMO(k)+" "+label(k)]),F.obj,x=>F.obj=x);
+}
+
+/* ---------- 照中文说 ---------- */
+let T=null, PICK=null;
+function newZh(){
+  const verb=rnd(Object.keys(SAY_VERBS));
+  const subj=rnd(ACTORS);
+  const recip=rnd(ACTORS.filter(a=>a!==subj));
+  T={bg:rnd(BG),subj,verb,recip,obj:rnd(objsFor(verb).length?objsFor(verb):["ball"])};
+  PICK={subj:null,verb:null,recip:null,obj:null};
+  renderZh();
+}
+function renderZh(){
+  const v=SAY_VERBS[T.verb];
+  $("s-tip").textContent="按中文，一个一个选出英文";
+  const st=Object.assign({},T,{subj:PICK.subj||T.subj,recip:PICK.recip||T.recip,
+                               obj:PICK.obj||T.obj,verb:PICK.verb||T.verb});
+  if(!okObj(st.verb,st.obj)) st.obj=objsFor(st.verb)[0];
+  drawState(st);
+
+  const slots=$("s-slots"); slots.innerHTML="";
+  const zh=document.createElement("div"); zh.className="slot";
+  zh.style.fontSize="20px"; zh.textContent=zhOf(T); slots.appendChild(zh);
+
+  const seq=[["subj","谁"],["verb","做什么"]]
+    .concat(v.recip?[["recip","给谁"]]:[]).concat(v.noObj?[]:[["obj","什么"]]);
+  seq.forEach(([k,lab])=>{
+    const d=document.createElement("div"); d.className="slot";
+    let t="___";
+    if(PICK[k]!==null){
+      t = k==="subj" ? subjWord(PICK[k])
+        : k==="recip"? A(PICK[k]).pron.obj
+        : k==="verb" ? vForm(PICK[k], PICK.subj||T.subj)
+        : "the "+label(PICK[k]);
+    }
+    d.innerHTML=`<span>${t}</span><small>${lab}</small>`;
+    d.onclick=()=>{ PICK[k]=null; renderZh(); };
+    slots.appendChild(d);
+  });
+
+  const bar=$("s-bar"); bar.innerHTML="";
+  const done=seq.every(([k])=>PICK[k]!==null);
+  if(done){
+    const st2=Object.assign({},T,PICK);
+    const ok = seq.every(([k])=>{
+      if(k==="subj") return A(PICK.subj).pron.subj===A(T.subj).pron.subj;
+      if(k==="recip")return A(PICK.recip).pron.obj===A(T.recip).pron.obj;
+      return PICK[k]===T[k];
+    });
+    const b=document.createElement("button");
+    b.className=ok?"read":"did"; b.style.flex="2";
+    b.textContent=(ok?"✓ ":"")+engOf(st2);
+    b.onclick=()=>{ Say(engOf(st2)); if(ok){bump("s");newZh();} };
+    bar.appendChild(b);
+    const n=document.createElement("button"); n.className="did"; n.textContent="换一句";
+    n.onclick=newZh; bar.appendChild(n);
+  }else{
+    const b=document.createElement("button"); b.className="did"; b.textContent="换一句";
+    b.onclick=newZh; bar.appendChild(b);
+  }
+
+  const bank=$("s-bank"); bank.innerHTML="";
+  const next=seq.find(([k])=>PICK[k]===null);
+  if(!next) return;
+  const k=next[0];
+  const subjNow=PICK.subj||T.subj;
+  if(k==="subj")
+    chipRow(bank,"选：谁",ACTORS.map(a=>[a,subjWord(a)]),null,
+      x=>{PICK.subj=x;Say(subjWord(x));renderZh();});
+  if(k==="verb")
+    chipRow(bank,"选：做什么",Object.keys(SAY_VERBS).map(x=>[x,vForm(x,subjNow)]),null,
+      x=>{PICK.verb=x;Say(vForm(x,subjNow));renderZh();});
+  if(k==="recip")
+    chipRow(bank,"选：给谁",ACTORS.filter(a=>a!==subjNow).map(a=>[a,A(a).pron.obj]),null,
+      x=>{PICK.recip=x;Say(A(x).pron.obj);renderZh();});
+  if(k==="obj")
+    chipRow(bank,"选：什么",objsFor(PICK.verb||T.verb).slice(0,10).map(x=>[x,EMO(x)+" "+label(x)]),null,
+      x=>{PICK.obj=x;Say(label(x));renderZh();});
+}
+
+/* ---------- 中文一句话 → 舞台（可选，走 DeepSeek） ---------- */
+async function aiScene(text){
+  const key=DB.apikey;
+  if(!key) return {err:"还没填 API key（右上角齿轮里填）"};
+  const menu={
+    scene:BG, actor:ACTORS, verb:Object.keys(SAY_VERBS), object:Object.keys(NOUNS)
+  };
+  const sys="You convert a short Chinese sentence into a scene spec. "+
+    "Reply with ONE JSON object and nothing else, no markdown. "+
+    "Keys: scene, subj, verb, recip, obj. "+
+    "Every value MUST be chosen from this menu: "+JSON.stringify(menu)+". "+
+    "actor meaning: xiaotao=我/小萄, you=你, meimei=他/爸爸/梅梅, ani=她/妈妈/阿妮, "+
+    "eason=Eason, xinxin=心心, ashan=它/鳐鱼/阿扇. "+
+    "Use recip only when verb is give, otherwise set recip to null. "+
+    "Pick the closest available object; never invent one.";
+  try{
+    const r=await fetch("https://api.deepseek.com/chat/completions",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+      body:JSON.stringify({
+        model:"deepseek-flash",
+        thinking:{type:"disabled"},
+        temperature:0,
+        response_format:{type:"json_object"},
+        messages:[{role:"system",content:sys},{role:"user",content:text}]})
+    });
+    if(!r.ok) return {err:"接口返回 "+r.status};
+    const d=await r.json();
+    const raw=(d.choices&&d.choices[0]&&d.choices[0].message.content||"").replace(/```json|```/g,"").trim();
+    const j=JSON.parse(raw);
+    if(!SAY_VERBS[j.verb]||!NOUNS[j.obj]) return {err:"没听懂，换个说法试试"};
+    if(!ACTORS.includes(j.subj)) j.subj="meimei";
+    if(!okObj(j.verb,j.obj)) j.obj=objsFor(j.verb)[0];
+    if(SAY_VERBS[j.verb].recip && !ACTORS.includes(j.recip))
+      j.recip=ACTORS.find(a=>a!==j.subj);
+    return {bg:BG.includes(j.scene)?j.scene:"classroom",
+            subj:j.subj,verb:j.verb,recip:j.recip,obj:j.obj};
+  }catch(e){ return {err:"出错了："+e.message}; }
+}
+
+function renderSay(){ SMODE==="free" ? renderFree() : renderZh(); }
+$("m-free").onclick=()=>{SMODE="free";$("m-free").classList.add("on");$("m-zh").classList.remove("on");renderSay();};
+$("m-zh").onclick=()=>{SMODE="zh";$("m-zh").classList.add("on");$("m-free").classList.remove("on");newZh();};
+
+/* ---------------- tabs ---------------- */
+function tab(w){ Say.stop();
+  ["word","listen","read","say"].forEach(n=>{
+    $("t-"+n).classList.toggle("on",n===w); $("v-"+n).classList.toggle("on",n===w);});
+  if(w==="say")renderSay();
+  if(w==="read"&&!R)newRead();
+  if(w==="listen"&&!L)newListen();}
+["word","listen","read","say"].forEach(n=>$("t-"+n).onclick=()=>tab(n));
+
+
+/* ---------------- 设置 ---------------- */
+function onVoices(){
+  const sel=$("voice"); if(!sel) return;
+  const vs=Say.voices(); sel.innerHTML="";
+  vs.forEach(v=>{ const o=document.createElement("option");
+    o.value=v.name; o.textContent=v.name+" ("+v.lang+")"; sel.appendChild(o); });
+  if(DB.voice){ Say.pickVoice(DB.voice); }
+  sel.value=Say.current();
+  if(!vs.length){ const o=document.createElement("option");
+    o.textContent="系统没有英语语音"; sel.appendChild(o); }
+}
+$("gear").onclick=()=>{ const p=$("settings");
+  p.style.display = p.style.display==="none" ? "block" : "none"; };
+$("voice").onchange=e=>{ Say.pickVoice(e.target.value); DB.voice=e.target.value; save();
+  Say("Give him the ball."); };
+if(DB.rate) Say.setRate(DB.rate);
+$("rate").value=Math.round(Say.rate()*100);
+$("ratev").textContent=Say.rate().toFixed(2);
+$("rate").oninput=e=>{ const r=e.target.value/100; Say.setRate(r); DB.rate=r; save();
+  $("ratev").textContent=r.toFixed(2); };
+$("try").onclick=()=>Say("She gives him the ball.");
+$("apikey").value=DB.apikey||"";
+$("apikey").oninput=e=>{DB.apikey=e.target.value.trim();save();};
+onVoices();
+
+paint(); newWord();
+</script>
+</body>
+</html>
