@@ -185,8 +185,7 @@ main.inner{background-image:var(--pagebg)}
 .ch{position:absolute;bottom:4%;transform:translateX(-50%)}
 .ch img{height:100%;display:block;pointer-events:none}
 .ch.flip img{transform:scaleX(-1)}
-.pt{position:absolute;transform:translate(-50%,-50%);border-radius:50%}
-.hot{width:20%;aspect-ratio:1}
+.pt{position:absolute;transform:translate(-50%,-50%);border-radius:50%}.pt.hot{width:20%;aspect-ratio:1}
 .ring{width:20%;aspect-ratio:1;border:5px solid var(--sun);
   box-shadow:0 0 0 3px rgba(255,255,255,.9),0 0 16px rgba(242,179,61,.75);
   animation:beat 1.4s ease-in-out infinite}
@@ -480,6 +479,9 @@ main.inner{background-image:var(--pagebg)}
    菜单瓷砖保持宽屏；练习、默写、设置这些"读和点"的页面收窄到阅读舒适宽度 */
 #sc-play .view,#sc-dict,#sc-dictman,#sc-settings,#sc-flash{max-width:920px;margin-left:auto;margin-right:auto}
 #sc-play .view .scene{max-height:58vh}
+#v-say .scene{max-height:42vh;margin:0 auto}
+#v-say .slots{justify-content:center}
+#v-say .opt{max-width:calc(42vh * 16 / 9 + 16px);margin-left:auto;margin-right:auto}
 .dmodes{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media (max-width:560px){ .dmodes{grid-template-columns:1fr} }
 .wopts{max-width:920px;margin-left:auto;margin-right:auto}
@@ -491,7 +493,7 @@ main.inner{background-image:var(--pagebg)}
 <header id="bar">
   <span class="avawrap"><img class="ava" id="ava" src="data:image/webp;base64,UklGRlAQAABXRUJQVlA4IEQQAADwUQCdASoAAQABPj0eikQiIaEVeyS8IAPEs7d+M6dvxQ7aGT/G/7blxfGI2sFd870bfpL0aOnJ5g/Oi9Mn+d9QD/odVF6EvS2f3T/s8H/0l/av/Q9wv+f80esigCfs/7d7dOyP5KahH4v/Lv8tvfIAPqv6F03rIA4KCgB4jf/X/n/QT9Kf+n/RfAV/NP7h/0/712p/3Y9mj9zDWpTi9orFUM6S+zEiH3egJR9I/hshFpQgyRpL6alkIJg9FL0RMAhceupzbK9mw6qUQTeg5PyZh3qBKnr5ssuZxPiPrPj4r3iDrJqAycSTfLsJF3yXXzKT0UPygtV0V9WHQMmHU/G/sKxiLucOXXba90BHKVBKna4v4usn2+btOUqGz9DTmtmDCaPmyIK6mv1e27NSsk22MFaeLgVNZB04bfsWx3dlhucNXQXoMNKBW1J8Yjj+s5XRiL5dadfW89vxVR8V2IAZ+bBet2GqgWBCtFFEl7aQ2T9Pwf+4LFeHZiIOs5OwOD8Kdf70UBd3cGJKNP2dHPu5lVqvD67H63gGsLgXG98QclDkbxsKOdqP/uth9fRcQZnIHJdSFXQC+PpTSBnzdI/lTtKPlxxWif+sTznp2VZd2+N2nIs/2fG7PT7b1uBbclISq04uqbrsJIs5lmKV4VdLDayaG5CXLoQ1igTp7AOUU4Pin5jjeg6eiLfTJz0WovQ7x8QUZJOvghCXF7GytUF4NoUUfnvkspRZHPWaFuH+j5vBf+abPp6P6fk3x4O077WRhPdhrzTbgZGD+9qRmy0eqbldp1RsOSJNb6+laWlZ/pY1IXn3d1iknqvlz8H3UD5gQuni2EZm1o8uS10jlqcg/Ff4z1uTE0rDMbjAPwGzrPdnEnwqOMgAAP0CKf+a0/J3312e//OrPxF+Isoz4nuNQgWlDYvxAV/HNiL12RgidGyfuZ13KGxCsVPmQWDNdp+8dC4zp9LmAAcfhc/IHhrUe6oVUXD0klNypqF8n/6yyoIOZZh4y3NXfGHU+c5R9267KS0Iy/XUFZDz3T3ZxEjdB8TK/DymhRDzdd11dMrI4HeocSBIC4yElAI/zX+D7RNiqKnxQqpmcPYlRWMEg/9jzYEAFB//JFcW+WxOdrd+8xqRTWGVJ9YNfXFrcI4cvlJIhXnVKtoPyfKj1ZcC8SF15yDKgby3RIQUz9DmItyUuC6vkHO0adsVgqnHfo+/GdUfcK7gyb147mnkPKVjCU/qT16qG5/M/AXIomcti/39eiYspyPuchhDop1O7JbxiXkCCl6DAXQ1SH7liRsKFXJ9oAOrMbnE2GHzo7uRDNw5ZV5S3Na8FzkZN95dTqKrzWlC6DXFKbw41/x69qdcMS1nIoyl1wlNJ9Kgpd1RAr/zFmWSqwo2gs4G4NC8LULPd1/PJc1JUQsIR67N+now4zCrbjmzuUI8cHlvnOBH/XAy8f3CZaYa5pHwWMXaeEZw0u/e8My7BPnzCrMB0zTwYfT1hqvpKmI6bT1vxERja+z4Si0/CLP5F9lUmQC3jaoBB1TZzU0gzsmYroBnY6zXFMHHF7A7bizptSQbQwA6FZ+bGrwxNHp9Jg1ubCPhQiWleo3qRmZ19/3lHRu8TMnpjapDH4yAe5FugTe9fOVwMLM6qjIe6Lnpaok1iWHHsl1tTUqSWWCl7nirjQ9kQUGyk8JJfs3ZJIQGZNf03FnvwsGnakoOAJVR2OYGNOhNveyH8azDLgAIEcAFIyQzjmS+xBkEI+OKL7dd+jJa8HKfAYiTUuRAjjcEkbISQ3ChetQAK3ugT/FduATKLrQxiv+J/TeZwgzUpaS78kIxztYIihyMf0AFessXXu6+Zx6oDG4E8htyyHnx6njGvdQ2V8pwrUbxua+WZOJEZkGBh65U8Y3eVvVyjdyozX5kf8Hn6T9GPVbID1iktkITWhIJ1CZyPGsx6U9/2W/u+pKFlLekzqMS6BY/cutObSacy1DkyjoIBpoitXNTSIGvzE2mTciq2nJX7+UTyvm/RH0nWcFhdABzp1aUNyHK+TNBNyBKQJog8FMjfkUBdw0IhIhiJR1gxOpd8VJqLBjmwqjq4yBQYQY+aky5vlsWYH29D9NgHQuWRqX+Hh0qq0exSuRzb6aXaq5shmKDYbnXkOt3v1DBiiCcPnorWG3WMN05IYJKt2D1kdkk/aFchI7f8nE3jxJSA+qEjF2m19OkFXteYDu4AYtuPF9n17bjQOl1xMZDROam8I+5xuKfjRGYuOX3PusHklvY6Ha/IXBgS4HG+Fa8Ep+mQGYNVpPQIrtThx3lDIhZRDba1llx6yvWqSh8UG5KlX736vep7WguwP8SjkYIjrofcK5GQzxTCzv80Jb6ggF2INhMGcDSkuonOkrdB+LkX757GosYGFt20A0oePLnY775k420ns4ULZK1VlUL65YGcCGYDoeFtg9ArJRX5mvSGQA/tPqQVeTaimnwe4gKiW5phwc7kHnMcF+P8gVcqJ9FwWBWKkZDOXMnHDYDBYIIQIJOE+iWtvdH/MAKi/4zoqIgL3UBsCUcaOoAZrnAHviQpEnOOTqV//PcRhsAqvxXQOHFuO10gcZ7PDM/cPfNeIjtx2txIZtZ/PDlDV/7AtNSN7aL12+BYw48bSwIv9UXsmf98J3Y5zCVZJeTbYre+OZksJ4zMaIpe+ZOsEvwKcwQuA6XZoHG6vyOjSrS5NKGj/i3HolSb+v9G/CM9aTeRKqZvlw9LlMf2z0ZhefYvOGQXvwzmQQURslc6iFs+TNfZ2u341YYs8WKnjIWdN04TJBpwlZh/5nP9n4ma/1StaCgpmBaYkces7vPOLHl2dtLsnkZNDHn3ttX4JhXTEoJbAf59UFsuwWSDSGDn6bgn/0J1nmDizjzkeAt6fv3QsiLgCGdXRGDJmNyQ3ChTSOQubco3iShbYc7kNQFWgtJEKQv/fLl7w5rbcvgBz3TmYhYUAOJu3GthygRxNsHLmrFPEtbR4GJLJMej5RiqnwOp0o6YjHu/yccj5iEIVARqf6LnwAXC0FHPYp0hN+vpV6fJNN6q1RJLFaDxcphrX6C3odiAGa2NKzqPyyifP62VGwWTmEceQfiiIX+PadLQjbi2j1GND++VE/SlF/Irwki6W1WVdR+5d5fOCvENUeot/uKTq/We0VI5gQvzR0LtyFOp2DDsKZgxMM46+139RbSQC2oZ6szDo5ufx2NTn+AQqNI7700ZAZcu8hx9eiuNcQBJvDgNNnbhDDca5wR0fhc+Ffjb6/qK6Ic5fBoj1HdGL19tbgIBPrLwBQ+U/cYVoowSrgVo9VsUbPK3hp68aVYwl1MDERgFAIc8GOvys+TGAEvhEPbbE0kxMPtYnBFVM7LcT8OLQzZE/QOXSvf02hf1OldOnDhqqWEb80HVCWfY6mhi9h88p1kmsSN+7fruw5nFXjLubDXi6SOBbQS2jxTHN2G0y0tnj1mUNDFuH8lPkn3aTJJ8viqf6FSwJMibddHZSJmu/Z+LG80dNWkfC1UfF8t8ClxYF9KWklexoSN91RXMVTRf6LKzELExuDsVoLLh1B43/wqlvurGTUMoVQtM/wMczQgLqM4NC3WVWEtGakYP28ou7yZlm0h9GsCCP5cNYNv10xAupdxLzD3ejwDt5ExgBtOOiRSUWXjJlwgAmaD4a3uBjfJcFMukh5EMcTKMC5DOmUM/afqbM4PeDQ33qPHkkSla6EDjiJmZOHT8LXrboZrcB2YdcXGCikqWdEO3GVoIbwmXnib2k8jRLRxskSDYDqWgYw2yz8bt0m6GJnsdK/oLAGhN7SvsmxsiFUURfPXgkjiiCJV+PHr4AOIhUU6QNSmviwChFi93VWmLW6H63nbrxJnhRJTzQHMBWpr5pwl+nv0O4HNnC3IfmFpEiGXF58ojB/xS6H2aeCjovK5hPL6IwgO1/GnY2V/dGFH2TScdg9Lq/8u5aLzgQhJYR8M/NGfGYC35yKZmaiX9m84R9NvgkwbGjhePRv/oFn3lphfVZPufxhO8IcpGKJaDDBluKi4Q8UZlYSI/64wsja5h8YVQKtEEu+35k/8r4CNsE7OgELz67B7NfiN+wkWjvSCvLf+/m2kLyRSgeabXFcQbtHK8Z3q/a3CCDa79+nS4KFqaDZ4HA/c6CAOf3aIaGgFTRYDlcP61IevU2DeSMy6Uv50D/Pr1fPXs7EmzaqeN5C9qVuh8izVIxxc6238UQC4yEezr+dNJ0Q/mQGzAIxowD2UfHbs/8cNWn0u0LAqQYKU/1qXfkIWWCpKvnDhiTQAw8LfXahXNHEoz+CsXtapJ+FITi7M1qBIBoH+vxzlPZCOVZYn3FBQG4TuiKLPXZnjMgGUDM+fd02zFPrtuP2q/2E1DZQ6SEs76pU78PBCOGyuGKul7emfiOjqwD0oZkEATE/Y7FI00G/A92w3CyG3ezVZp1rWQQornDuTNj5p68SOD+jYBn+XmXQhwXxFIQOQv6rtzJbvMcEG7grWZiQ922Cci4NzZv9CF3e/qXGIbzSlRJsWF1iJt7Mv9z0afyuFgn06dWtIyAOL9fu5gFGGEkS6XWPHKBx0Oj013z0D9lfzWGlVgwxx29sBCUJMXyiiv9XHykh1/J9kHnwZDGAtTcuhPSXPG9Txz3otBnmBRVz34faG7VIsxqtaWh70+BtrkBdrfPAgH88PzAAiuUdptB6a1PbE0L6ogAg7zhowLE56Dzv2wgLIYGJeuO7NH6qSq9yxnCxwGXbF5Os1aeZ18jAv14M1OYhbKZuB38tA3zhqzUR0SGOF+zzTHcTgZv0USMznY2BN9NsMC48kfUkf2IMpmICTMgLqHkXlJqKuNt3gECGkjSCVZuIf6F+J3TbeLuQ4RVPUjBrM0NmpvMgyD1BNcvO08e62t9ZorIwp/peGElSCsoUWNxGXZVzzr7lwHhNnEnlp587JqZ3j8Hxg18tqsRYEI2OAihZE+vcGfsvG1z2vA/D8R2pe7fbZQtdIGsve2xzBD6kzq5BNIeqeygdHqhCSc4CIbb32SMF+5iu+guVvlVCkO22t2YAmIAmNSDfy0KXfEU2h3dMD5zuIOra+0rIFsn3AyJFlriNFlHO+wwJEoowHXgeqIvWTpMm0Sn9bPPl5rNOF7O45IXh7G6c0BVslUiGeFffWrrXy5l54uRfMNjp7IZofP6MhClKFJx5Ft2ykBOVK1b/WNJUsK3qajrxArl4twvmz3ReJThyLwekytdNNB+SKwDqGSYvKvOrn7Y5QwQjQQ4aaQyNpkfPMDxvYBkVfjrDuaKeIn8U2rYnyu87TbWIgMOeeNXxD342JKP2DyXD5fulxp2iJG3ZDrHZFWir2OPjy9wCOn+jTkVsXnw10vYvvltrQTJz0sA4ggwQFcyhRF77RcYZanwvwYDRCLga+eYjFz7DApVQtcXSOxpggAK2AASQgWT4Y9sJGJvdST6ajqdkfn7Saua42gkICR+JLI8g0oCAyXqYURIrOJlNsXr+YAtbwYSmuTB2A+W8ntzVdSRCvzyBoL2bswKQAj6V6bfVeBIGlvJQD9IKAAAA=" alt=""></span>
   <div>
-    <div class="ttl" id="bar-ttl">Henryingo <span style="font-size:10px;color:var(--soft);font-weight:400">v17</span></div>
+    <div class="ttl" id="bar-ttl">Henryingo <span style="font-size:10px;color:var(--soft);font-weight:400">v18</span></div>
     <div class="crumb" id="bar-crumb"></div>
   </div>
   <button class="back" id="back" style="display:none">返回</button>
@@ -830,6 +832,7 @@ window.onerror=function(m,src,l,c){
 </script>
 <script>
 const ANCHORS = {"meimei": {"hair": [0.495, 0.082], "head": [0.495, 0.222], "eye": [0.524, 0.261], "ear": [0.393, 0.273], "nose": [0.548, 0.296], "mouth": [0.533, 0.334], "neck": [0.495, 0.39], "shoulder": [0.394, 0.423], "arm": [0.371, 0.484], "hand": [0.613, 0.592], "tummy": [0.478, 0.546], "back": [0.59, 0.508], "leg": [0.478, 0.72], "knee": [0.478, 0.818], "foot": [0.478, 0.983], "handSlot": [0.563, 0.604]}, "ani": {"hair": [0.526, 0.036], "head": [0.526, 0.218], "eye": [0.559, 0.27], "ear": [0.407, 0.285], "nose": [0.588, 0.315], "mouth": [0.571, 0.364], "neck": [0.526, 0.436], "shoulder": [0.424, 0.469], "arm": [0.4, 0.508], "hand": [0.659, 0.65], "tummy": [0.498, 0.546], "back": [0.612, 0.508], "leg": [0.498, 0.72], "knee": [0.498, 0.818], "foot": [0.498, 0.983], "handSlot": [0.608, 0.661]}, "xiaotao": {"hair": [0.5, 0.111], "head": [0.5, 0.229], "eye": [0.535, 0.262], "ear": [0.378, 0.272], "nose": [0.564, 0.292], "mouth": [0.546, 0.323], "neck": [0.5, 0.371], "shoulder": [0.399, 0.404], "arm": [0.375, 0.475], "hand": [0.659, 0.708], "tummy": [0.496, 0.546], "back": [0.609, 0.508], "leg": [0.496, 0.72], "knee": [0.496, 0.818], "foot": [0.496, 0.983], "handSlot": [0.609, 0.719]}, "eason": {"hair": [0.469, 0.129], "head": [0.469, 0.265], "eye": [0.503, 0.304], "ear": [0.35, 0.315], "nose": [0.531, 0.338], "mouth": [0.514, 0.374], "neck": [0.469, 0.429], "shoulder": [0.363, 0.461], "arm": [0.338, 0.509], "hand": [0.628, 0.662], "tummy": [0.473, 0.556], "back": [0.591, 0.519], "leg": [0.473, 0.726], "knee": [0.473, 0.823], "foot": [0.473, 0.983], "handSlot": [0.575, 0.673]}, "xinxin": {"hair": [0.519, 0.105], "head": [0.519, 0.258], "eye": [0.551, 0.301], "ear": [0.404, 0.314], "nose": [0.579, 0.34], "mouth": [0.562, 0.38], "neck": [0.519, 0.441], "shoulder": [0.425, 0.475], "arm": [0.402, 0.51], "hand": [0.628, 0.694], "tummy": [0.48, 0.546], "back": [0.585, 0.508], "leg": [0.48, 0.72], "knee": [0.48, 0.818], "foot": [0.48, 0.983], "handSlot": [0.581, 0.705]}, "ashan": {"eye": [0.718, 0.57], "mouth": [0.742, 0.679], "tail": [0.146, 0.408], "fin": [0.46, 0.831], "back": [0.5, 0.391], "handSlot": [0.838, 0.713]}};
+const KICK = {"ani": [0.974, 0.724], "eason": [0.992, 0.633], "meimei": [0.942, 0.53], "xiaotao": [0.949, 0.603], "xinxin": [0.97, 0.633]};
 const HANDS   = {"ani": {"01": [0.659, 0.65], "02": [0.462, 0.764], "03": [0.665, 0.489], "04": [0.386, 0.655], "05": [0.679, 0.527], "06": [0.588, 0.886], "07": [0.647, 0.52], "08": [0.238, 0.552], "09": [0.407, 0.679], "10": [0.553, 0.78], "11": [0.335, 0.842], "12": [0.364, 0.9], "13": [0.962, 0.459], "14": [0.383, 0.655], "15": [0.712, 0.492], "16": [0.559, 0.745], "17": [0.385, 0.938], "18": [0.791, 0.615], "21": [0.447, 0.905], "22": [0.509, 0.935], "23": [0.595, 0.936], "24": [0.667, 0.442]}, "ashan": {"01": [0.771, 0.639], "02": [0.872, 0.53], "03": [0.631, 0.753], "04": [0.859, 0.589], "21": [0.7, 0.558], "22": [0.724, 0.609], "23": [0.702, 0.6], "24": [0.71, 0.653]}, "eason": {"01": [0.628, 0.662], "02": [0.366, 0.844], "03": [0.593, 0.835], "04": [0.409, 0.832], "05": [0.761, 0.539], "06": [0.395, 0.85], "07": [0.621, 0.817], "08": [0.278, 0.53], "09": [0.589, 0.835], "10": [0.438, 0.818], "11": [0.73, 0.838], "12": [0.323, 0.641], "13": [0.304, 0.836], "14": [0.416, 0.661], "15": [0.34, 0.836], "16": [0.683, 0.826], "17": [0.368, 0.839], "18": [0.761, 0.638], "21": [0.3, 0.473], "22": [0.36, 0.855], "23": [0.377, 0.85], "24": [0.352, 0.856]}, "meimei": {"01": [0.613, 0.592], "02": [0.784, 0.482], "03": [0.664, 0.512], "04": [0.374, 0.606], "05": [0.691, 0.468], "06": [0.423, 0.806], "07": [0.701, 0.424], "08": [0.232, 0.514], "09": [0.372, 0.608], "10": [0.638, 0.433], "12": [0.324, 0.595], "13": [0.243, 0.438], "14": [0.39, 0.626], "15": [0.683, 0.492], "16": [0.577, 0.439], "17": [0.522, 0.523], "18": [0.264, 0.615], "21": [0.308, 0.489], "22": [0.327, 0.635], "23": [0.288, 0.605], "24": [0.311, 0.633]}, "xiaotao": {"01": [0.659, 0.708], "02": [0.835, 0.476], "03": [0.663, 0.479], "04": [0.33, 0.717], "05": [0.663, 0.523], "06": [0.634, 0.824], "07": [0.681, 0.471], "08": [0.176, 0.568], "09": [0.413, 0.717], "12": [0.295, 0.667], "13": [0.918, 0.436], "14": [0.304, 0.624], "15": [0.69, 0.477], "17": [0.563, 0.559], "18": [0.808, 0.645], "22": [0.342, 0.72], "23": [0.322, 0.703], "24": [0.337, 0.732]}, "xinxin": {"01": [0.628, 0.694], "02": [0.395, 0.836], "03": [0.596, 0.826], "04": [0.358, 0.661], "05": [0.632, 0.553], "06": [0.659, 0.883], "07": [0.551, 0.815], "08": [0.238, 0.556], "09": [0.691, 0.52], "10": [0.568, 0.83], "11": [0.554, 0.917], "12": [0.728, 0.573], "13": [0.377, 0.811], "14": [0.645, 0.809], "15": [0.676, 0.505], "16": [0.524, 0.794], "17": [0.389, 0.798], "18": [0.285, 0.618], "21": [0.296, 0.442], "22": [0.392, 0.826], "23": [0.637, 0.618], "24": [0.664, 0.462]}};
 const IMG     = window.__IMG__;;
 const ART = window.__ART__ || {};
@@ -1291,21 +1294,30 @@ function pin(w,cid,part,cls){
   d.style.left=p[0]+"%"; d.style.top=p[1]+"%"; w.appendChild(d); return d;
 }
 /* 物品落在哪：踢用脚，喝和吃靠嘴，其余用该姿势的手 */
-const ATTACH={kick:"foot",drink:"mouth",eat:"mouth"};
+const SMALL_AT={eat:0.55, drink:0.55};   // 靠近脸的动作，物品缩小
 function hold(w,cid,emoji,pose){
+  const flip=w.classList.contains("flip");
   let p=null;
-  const where=ATTACH[pose];
-  if(where){ p=at(w,cid,where); }
+  if(pose==="kick" && KICK[sprite(cid)]){
+    const k=KICK[sprite(cid)];
+    p=[(flip?1-(k[0]+0.07):(k[0]+0.07))*100, (k[1]+0.02)*100];
+  }
+  if(!p && SMALL_AT[pose]){
+    // 吃喝：手举在嘴边，物品放在嘴的正前方偏下
+    const m=(ANCHORS[sprite(cid)]||{}).mouth;
+    if(m){ const x=m[0]+0.16, y=m[1]+0.05; p=[(flip?1-x:x)*100, y*100]; }
+  }
   if(!p){
     const key=(A(cid).kind==="animal"?RAY:POSE)[pose];
     const h=key&&(HANDS[sprite(cid)]||{})[key];
-    if(h) p=[(w.classList.contains("flip")?1-h[0]:h[0])*100, h[1]*100];
+    if(h) p=[(flip?1-h[0]:h[0])*100, h[1]*100];
   }
   if(!p) p=at(w,cid,"handSlot");
   if(!p) return;
   const d=document.createElement("div");
   d.className="obj"; d.textContent=emoji;
   d.style.left=p[0]+"%"; d.style.top=p[1]+"%";
+  if(SMALL_AT[pose]) d.style.fontSize="calc(var(--u,300px)*"+(0.17*SMALL_AT[pose]).toFixed(3)+")";
   w.appendChild(d);
 }
 
@@ -1640,9 +1652,9 @@ function zhOf(st){
   return `${sw}${v.zh}${o}。`;
 }
 function tagPerson(wrap,id){
-  const p=A(id).person; if(p===3) return;
+  if(A(id).person!==2) return;          // 只给 you 一个指示，I 不加
   const d=document.createElement("div");
-  d.className="obj"; d.textContent = p===1 ? "💬" : "👉";
+  d.className="obj"; d.textContent="👉";
   d.style.left="50%"; d.style.top="-6%"; wrap.appendChild(d);
 }
 function drawState(st){
@@ -1655,7 +1667,9 @@ function drawState(st){
     const g=addChar(scene,st.subj,"give",30,false); hold(g,st.subj,EMO(st.obj),"give"); tagPerson(g,st.subj);
     const r=addChar(scene,st.recip,"receive",70,true); tagPerson(r,st.recip);
   }else{
-    const g=addChar(scene,st.subj,v.pose,50,false); hold(g,st.subj,EMO(st.obj),"give"); tagPerson(g,st.subj);
+    const g=addChar(scene,st.subj,v.pose,50,false);
+    if(!v.noObj) hold(g,st.subj,EMO(st.obj),v.pose);   // 按该动作自己的挂点：踢→脚、吃喝→嘴
+    tagPerson(g,st.subj);
   }
 }
 function chipRow(host,title,items,cur,set){
@@ -2774,7 +2788,7 @@ document.querySelectorAll("[data-cat]").forEach(b=>{
 $("ava").onclick=()=>{ if(CUR!=="home") $("confirm").classList.add("on"); };
 $("c-stay").onclick=()=>$("confirm").classList.remove("on");
 $("c-go").onclick=()=>{ $("confirm").classList.remove("on"); /* ================= 版本与强制更新 ================= */
-const APP_VERSION="v17";
+const APP_VERSION="v18";
 $("verline").textContent=APP_VERSION;
 $("btn-update").onclick=async function(){
   const note=$("upnote"), btn=$("btn-update");
@@ -2895,7 +2909,7 @@ if("speechSynthesis" in window){
 }
 
 /* ================= 版本与强制更新 ================= */
-const APP_VERSION="v17";
+const APP_VERSION="v18";
 $("verline").textContent=APP_VERSION;
 $("btn-update").onclick=async function(){
   const note=$("upnote"), btn=$("btn-update");
