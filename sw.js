@@ -1,6 +1,6 @@
 /* Henryingo 离线缓存
    改版本号就会触发更新：换了 index.html 之后把 CACHE 改成新的名字即可 */
-const CACHE = "henryingo-v8";
+const CACHE = "henryingo-v16";
 const FILES = [
   "./",
   "./index.html",
