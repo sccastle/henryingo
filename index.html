@@ -420,6 +420,70 @@ main.inner{background-image:var(--pagebg)}
 #confirm .btns button{flex:1;padding:12px;border-radius:12px;font-weight:600}
 #confirm .stay{background:#fff;border:2px solid var(--line)}
 #confirm .go{background:var(--green);color:#fff}
+
+/* ===================== 按钮尺寸体系 =====================
+   L  首页 Play / Settings          —— 只在首页，保持大
+   M  页面操作（识别、对答案、下一个…） —— 高 48，宽随内容，有上下限
+   S  行内小操作（跳过、导出…）       —— 高 44
+   撑满只在：首页、确认弹窗、设置分段器、窄屏。 */
+.btn,.fbtn,.fact,.next,.dman,.saybar button{
+  flex:0 0 auto; width:auto; height:48px; min-height:48px;
+  padding:0 22px; min-width:108px; max-width:300px;
+  font-size:15px; font-weight:700; border-radius:16px;
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  white-space:nowrap; line-height:1;
+}
+.btn.primary,.fbtn.hot,.fact.yes,.next,.saybar .read{
+  flex:0 0 auto; max-width:300px;
+  background:var(--green); color:#fff; border:0;
+  box-shadow:0 4px 0 #2F6B45, 0 8px 14px rgba(47,107,69,.22);
+}
+.btn.ghost,.fbtn,.fact.again,.dman,.saybar .did{
+  flex:0 0 auto;
+  background:#fff; color:var(--ink); border:1.5px solid var(--line);
+  box-shadow:0 3px 0 #E4EBE5;
+}
+.btn:active,.fbtn:active,.fact:active,.next:active,.dman:active,.saybar button:active{
+  transform:translateY(2px);
+}
+.btn.primary:active,.fbtn.hot:active,.fact.yes:active,.next:active,.saybar .read:active{
+  box-shadow:0 2px 0 #2F6B45;
+}
+.btn.ghost:active,.fbtn:active,.fact.again:active,.dman:active,.saybar .did:active{
+  box-shadow:0 1px 0 #E4EBE5;
+}
+.fbtn[disabled],.btn[disabled]{opacity:.4;box-shadow:none}
+
+/* 按钮行：学习流程居中，管理类左对齐 */
+.facts,.saybar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
+.after,.spfoot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end;margin-top:14px}
+.after .verdict,.spfoot .verdict{margin-right:auto}
+.dbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#sc-dict .dman{margin:18px auto 0;display:flex}
+#v-dictate > div[style*="display:flex"]{justify-content:flex-end}
+
+/* 次要小按钮 */
+#sp-skip,#gp-skip,#d-export,#d-import,#d-reanalyze,#d-manual,#rep-refresh,#f-review,#dt-zh{
+  height:44px;min-height:44px;padding:0 16px;font-size:14px;min-width:0;
+}
+
+/* 窄屏：两个按钮平分一行，便于拇指点 */
+@media (max-width:560px){
+  .facts,.saybar,.after,.spfoot,.dbar{justify-content:stretch}
+  .btn,.btn.primary,.btn.ghost,.fbtn,.fbtn.hot,.fact,.fact.yes,.fact.again,.next,
+  .saybar button,.saybar .read,.saybar .did{flex:1 1 0;max-width:none;min-width:0;padding:0 12px}
+  .after .verdict,.spfoot .verdict{flex:1 1 100%;margin-right:0}
+}
+
+
+/* ===================== 内容区限宽 =====================
+   菜单瓷砖保持宽屏；练习、默写、设置这些"读和点"的页面收窄到阅读舒适宽度 */
+#sc-play .view,#sc-dict,#sc-dictman,#sc-settings,#sc-flash{max-width:920px;margin-left:auto;margin-right:auto}
+#sc-play .view .scene{max-height:58vh}
+.dmodes{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (max-width:560px){ .dmodes{grid-template-columns:1fr} }
+.wopts{max-width:920px;margin-left:auto;margin-right:auto}
+.pair{max-width:920px;margin-left:auto;margin-right:auto}
 </style>
 </head>
 <body>
@@ -427,7 +491,7 @@ main.inner{background-image:var(--pagebg)}
 <header id="bar">
   <span class="avawrap"><img class="ava" id="ava" src="data:image/webp;base64,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" alt=""></span>
   <div>
-    <div class="ttl" id="bar-ttl">Henryingo <span style="font-size:10px;color:var(--soft);font-weight:400">v16</span></div>
+    <div class="ttl" id="bar-ttl">Henryingo <span style="font-size:10px;color:var(--soft);font-weight:400">v17</span></div>
     <div class="crumb" id="bar-crumb"></div>
   </div>
   <button class="back" id="back" style="display:none">返回</button>
@@ -616,7 +680,7 @@ main.inner{background-image:var(--pagebg)}
       <div class="wcard" id="w-card"><button class="wspk" id="w-spk">🔊</button></div>
       <div class="wopts" id="w-opts"></div>
       <div class="after" id="w-after" style="display:none">
-        <button class="next" id="w-next" style="margin-left:0;width:100%">下一个 ▶</button>
+        <button class="next" id="w-next">下一个 ▶</button>
       </div>
     </div>
 
@@ -1705,7 +1769,7 @@ function renderZh(){
       return PICK[k]===T[k];
     });
     const b=document.createElement("button");
-    b.className=ok?"read":"did"; b.style.flex="2";
+    b.className=ok?"read":"did";
     b.textContent=(ok?"✓ ":"")+engOf(st2);
     b.onclick=()=>{ Say(engOf(st2)); if(ok){bump();newZh();} };
     bar.appendChild(b);
@@ -2194,7 +2258,7 @@ function dShowReview(res){
 
   card.appendChild(list);
   const bar=document.createElement("div");
-  bar.style.cssText="display:flex;gap:9px;margin-top:12px";
+  bar.style.cssText="display:flex;gap:10px;margin-top:14px;justify-content:flex-end;flex-wrap:wrap";
   const cancel=document.createElement("button"); cancel.className="fbtn"; cancel.textContent="取消";
   cancel.onclick=()=>{ DPEND=null; box.innerHTML=""; };
   const ok=document.createElement("button"); ok.className="fbtn hot";
@@ -2710,7 +2774,7 @@ document.querySelectorAll("[data-cat]").forEach(b=>{
 $("ava").onclick=()=>{ if(CUR!=="home") $("confirm").classList.add("on"); };
 $("c-stay").onclick=()=>$("confirm").classList.remove("on");
 $("c-go").onclick=()=>{ $("confirm").classList.remove("on"); /* ================= 版本与强制更新 ================= */
-const APP_VERSION="v16";
+const APP_VERSION="v17";
 $("verline").textContent=APP_VERSION;
 $("btn-update").onclick=async function(){
   const note=$("upnote"), btn=$("btn-update");
@@ -2831,7 +2895,7 @@ if("speechSynthesis" in window){
 }
 
 /* ================= 版本与强制更新 ================= */
-const APP_VERSION="v16";
+const APP_VERSION="v17";
 $("verline").textContent=APP_VERSION;
 $("btn-update").onclick=async function(){
   const note=$("upnote"), btn=$("btn-update");
