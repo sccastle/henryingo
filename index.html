@@ -486,6 +486,37 @@ main.inner{background-image:var(--pagebg)}
 @media (max-width:560px){ .dmodes{grid-template-columns:1fr} }
 .wopts{max-width:920px;margin-left:auto;margin-right:auto}
 .pair{max-width:920px;margin-left:auto;margin-right:auto}
+#st-card{padding:32px 26px 22px;display:block;min-height:0}
+.study-content{text-align:center;width:100%;min-width:0}
+#st-card .wword{font-size:clamp(38px,7.4vw,68px);line-height:1.2;padding:8px 36px 0;overflow-wrap:anywhere;letter-spacing:-1.5px}
+.study-zh{font-size:clamp(28px,4.8vw,38px);font-weight:700;color:#375e47;line-height:1.4;margin:12px 0 24px}
+.sound-panel{max-width:620px;margin:0 auto;border-top:1px solid #e6ece5;padding-top:18px}
+.sound-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;font-weight:700;color:#46634f}
+.sound-accent{font-size:12px;font-weight:400;color:#75857a}
+.sound-ipa{font-family:'Segoe UI',Arial,sans-serif;font-size:clamp(19px,3vw,24px);color:#68796c;margin:12px 0 18px;letter-spacing:1px}
+.sound-parts{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.sound-part{font:inherit;min-width:116px;max-width:100%;padding:16px 24px 12px;border:2px solid var(--part-border);border-radius:18px;background:var(--part-bg);color:var(--part-ink);box-shadow:0 5px 0 var(--part-border);cursor:pointer;transition:transform .15s,box-shadow .15s;overflow-wrap:anywhere}
+.tone-0{--part-bg:#fff2d6;--part-border:#e6c889;--part-ink:#8d5b12}
+.tone-1{--part-bg:#e5f2e9;--part-border:#a8cfb2;--part-ink:#34734b}
+.tone-2{--part-bg:#e9effc;--part-border:#b6c7e9;--part-ink:#486b9f}
+.sound-spelling,.sound-part-ipa,.sound-tap{display:block}
+.sound-spelling{font-size:clamp(28px,5vw,38px);font-weight:750;line-height:1.2}
+.sound-part-ipa{font-family:'Segoe UI',Arial,sans-serif;font-size:22px;margin-top:8px}
+.sound-tap{font-size:11px;opacity:.75;margin-top:10px}
+.sound-link{color:#a1b09e;font-size:28px}
+.sound-part.is-speaking{transform:translateY(-4px);box-shadow:0 7px 0 var(--part-border),0 0 0 4px #f4da7d}
+.sound-word.is-speaking{color:#4f9866}
+.sound-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.sound-actions .fbtn{font-size:15px;min-height:46px}
+.sound-status{font-size:13px;color:#78867a;line-height:1.7;min-height:22px;margin-top:16px}
+.sound-ai-note,.sound-missing{font-size:12px;color:#78867a;margin:12px}
+.sound-part:focus-visible,.sound-actions button:focus-visible{outline:3px solid #42694c;outline-offset:5px}
+#st-prev:disabled{opacity:.4;cursor:default}
+.sound-demo-entry{margin:16px auto;text-align:center}
+.sound-demo-entry .fbtn{font-size:15px}
+@media(max-width:480px){#st-card{padding:22px 14px 18px}#st-card .wword{padding:26px 0 0;letter-spacing:-.7px}.study-zh{margin:10px 0 18px}.sound-part{min-width:98px;padding:14px 17px 10px}.sound-parts{gap:8px}.sound-actions .fbtn{padding:10px 12px;font-size:14px}.sound-status{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.sound-part{transition:none}}
+
 </style>
 </head>
 <body>
@@ -493,7 +524,7 @@ main.inner{background-image:var(--pagebg)}
 <header id="bar">
   <span class="avawrap"><img class="ava" id="ava" src="data:image/webp;base64,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" alt=""></span>
   <div>
-    <div class="ttl" id="bar-ttl">Henryingo <span style="font-size:10px;color:var(--soft);font-weight:400">v18</span></div>
+    <div class="ttl" id="bar-ttl">Henryingo <span style="font-size:10px;color:var(--soft);font-weight:400">v19</span></div>
     <div class="crumb" id="bar-crumb"></div>
   </div>
   <button class="back" id="back" style="display:none">返回</button>
@@ -501,7 +532,7 @@ main.inner{background-image:var(--pagebg)}
 
 <main>
   <!-- ============ 首页 ============ -->
-  <section class="screen on" id="sc-home">
+  <section class="screen on" id="sc-home"><div class="sound-demo-entry"><button class="fbtn" onclick="dStartSoundDemo()">▶ 体验新版背词 · classmate</button></div>
     <div class="hero">
       <img class="hero-bg" id="hero-bg" alt="">
       <img class="hero-fam" id="hero-fam" alt="">
@@ -573,7 +604,7 @@ main.inner{background-image:var(--pagebg)}
 
   <!-- ============ 默写主页 ============ -->
   <section class="screen" id="sc-dict">
-    <div class="dsum" id="d-sum"></div>
+    <div class="dsum" id="d-sum"></div><div class="sound-demo-entry"><button class="fbtn" onclick="dStartSoundDemo()">体验读音拆分 · classmate</button></div>
     <h4 class="dh">练什么</h4>
     <div class="dseg" id="d-scope"></div>
     <h4 class="dh">怎么练</h4>
@@ -819,7 +850,7 @@ main.inner{background-image:var(--pagebg)}
 <script>
 if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
   window.addEventListener("load",function(){
-    navigator.serviceWorker.register("./sw.js").catch(function(){});
+    navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(function(){});
   });
 }
 window.onerror=function(m,src,l,c){
@@ -1166,7 +1197,7 @@ const ZH=new Proxy({},{get:(_,k)=>(NOUNS[k]&&NOUNS[k].z)||VERBS_W[k]||ADJ_W[k]||
 
 /* ================= 朗读 ================= */
 var Say=(function(){
-  var list=[],voice=null,rate=0.72;
+  var list=[],voice=null,rate=0.72,pending=null;
   function load(){
     if(!("speechSynthesis" in window)) return;
     try{ list=(speechSynthesis.getVoices()||[]).filter(function(x){return /^en/i.test(x.lang);}); }
@@ -1179,16 +1210,16 @@ var Say=(function(){
   function speak(t,r){
     if(!("speechSynthesis" in window)) return;
     try{
-      speechSynthesis.cancel();
+      clearTimeout(pending); speechSynthesis.cancel();
       try{ speechSynthesis.resume(); }catch(e){}
       var u=new SpeechSynthesisUtterance(t);
       if(voice) u.voice=voice;
       u.lang=voice?voice.lang:"en-US";
       u.rate=r||rate; u.pitch=1.03; u.volume=1;
-      setTimeout(function(){ try{ speechSynthesis.speak(u); }catch(e){} }, 60);
+      pending=setTimeout(function(){ try{ speechSynthesis.speak(u); }catch(e){} }, 60);
     }catch(e){}
   }
-  speak.stop=function(){ try{speechSynthesis.cancel();}catch(e){} };
+  speak.stop=function(){ clearTimeout(pending); try{speechSynthesis.cancel();}catch(e){} };
   speak.reload=load;
   speak.voices=function(){ return list; };
   speak.pickVoice=function(n){ var f=list.find(function(x){return x.name===n;}); if(f) voice=f; };
@@ -2193,14 +2224,15 @@ async function dExtract(text){
   const sys=
     "You extract a spelling-test list from a Chinese primary school English homework notice. "+
     "Reply with ONE JSON object and nothing else, no markdown fences. Shape: "+
-    '{"batch":"短名称","words":[{"en":"","zh":"","syll":["",""],"morph":[{"p":"","zh":""}],"whole":false,"reason":""}],'+
+    '{"batch":"短名称","words":[{"en":"","zh":"","syll":["",""],"pronunciation":{"ipa":"","parts":[{"text":"","ipa":""}]},"morph":[{"p":"","zh":""}],"whole":false,"reason":""}],'+
     '"sentences":[{"en":"","zh":""}]}. '+
     "Rules: "+
     "1) Only take items the notice asks the child to memorise for dictation (听写/默写). "+
     "Ignore reading assignments, page numbers, point systems and anything else. "+
     "2) zh must be the Chinese gloss given in the notice; only write your own if the notice has none. "+
     "3) syll splits the word into pronounceable chunks a 6-year-old can use, e.g. teacher -> [\"teach\",\"er\"], "+
-    "name -> [\"na\",\"me\"]. Never split into single letters. "+
+    "name -> [\"name\"], monkey -> [\"mon\",\"key\"]. Use spoken syllables, not arbitrary spelling cuts. Silent e is not a syllable. "+
+    "For pronunciation, provide US English IPA for the full word and each spoken syllable. parts.text must concatenate to the original spelling. Align sounds in word context; do not read fragments as standalone words. If uncertain set pronunciation to null. "+
     "4) morph is the meaning breakdown. Two cases MUST be split: "+
     "(a) a compound made of two standalone English words — daylight = day + light, shotgun = shot + gun, "+
     "classmate = class + mate, bedroom = bed + room, sunflower = sun + flower, football = foot + ball; "+
@@ -2294,7 +2326,7 @@ function dCommit(){
   DPEND.words.forEach(w=>{
     if(!w.en) return;
     DICT.words[dKey(w.en)]={en:w.en.trim(), zh:w.zh||"", syll:(w.syll&&w.syll.length?w.syll:[w.en]),
-      morph:(w.whole?null:(w.morph||null)), whole:!!w.whole, reason:w.reason||"", batch:id,
+      pronunciation:w.pronunciation||null, morph:(w.whole?null:(w.morph||null)), whole:!!w.whole, reason:w.reason||"", batch:id,
       star:false, wrong:0, right:0};
   });
   DPEND.sentences.forEach(t=>{
@@ -2374,6 +2406,106 @@ function dRenderLib(){
   }
 }
 
+/* Pronunciation learning: spelling chunks and meaning chunks are independent. */
+const D_SOUND_BANK = {
+ classmate:{ipa:'ˈklæs.meɪt',parts:[['class','klæs','class'],['mate','meɪt','mate']]},
+ classroom:{ipa:'ˈklæs.ruːm',parts:[['class','klæs','class'],['room','ruːm','room']]},
+ bedroom:{ipa:'ˈbed.ruːm',parts:[['bed','bed','bed'],['room','ruːm','room']]},
+ bathroom:{ipa:'ˈbæθ.ruːm',parts:[['bath','bæθ','bath'],['room','ruːm','room']]},
+ football:{ipa:'ˈfʊt.bɔːl',parts:[['foot','fʊt','foot'],['ball','bɔːl','ball']]},
+ daylight:{ipa:'ˈdeɪ.laɪt',parts:[['day','deɪ','day'],['light','laɪt','light']]},
+ shotgun:{ipa:'ˈʃɑːt.ɡʌn',parts:[['shot','ʃɑːt','shot'],['gun','ɡʌn','gun']]},
+ sunflower:{ipa:'ˈsʌnˌflaʊ.ɚ',parts:[['sun','sʌn','sun'],['flow','flaʊ',null],['er','ɚ',null]]},
+ monkey:{ipa:'ˈmʌŋ.ki',parts:[['mon','mʌŋ',null],['key','ki','key']]},
+ teacher:{ipa:'ˈtiːtʃ.ɚ',parts:[['teach','tiːtʃ','teach'],['er','ɚ',null]]},
+ name:{ipa:'neɪm',parts:[['name','neɪm','name']]},
+ friend:{ipa:'frend',parts:[['friend','frend','friend']]},
+ apple:{ipa:'ˈæp.əl',parts:[['ap','æp',null],['ple','əl',null]]},
+ happy:{ipa:'ˈhæp.i',parts:[['hap','hæp',null],['py','i',null]]},
+ people:{ipa:'ˈpiː.pəl',parts:[['peo','piː',null],['ple','pəl',null]]},
+ welcome:{ipa:'ˈwel.kəm',parts:[['wel','wel','well'],['come','kəm',null]]},
+ mother:{ipa:'ˈmʌð.ɚ',parts:[['moth','mʌð',null],['er','ɚ',null]]},
+ father:{ipa:'ˈfɑː.ðɚ',parts:[['fa','fɑː',null],['ther','ðɚ',null]]},
+ sister:{ipa:'ˈsɪs.tɚ',parts:[['sis','sɪs',null],['ter','tɚ',null]]},
+ brother:{ipa:'ˈbrʌð.ɚ',parts:[['broth','brʌð',null],['er','ɚ',null]]},
+ cat:{ipa:'kæt',parts:[['cat','kæt','cat']]},dog:{ipa:'dɔːɡ',parts:[['dog','dɔːɡ','dog']]},
+ school:{ipa:'skuːl',parts:[['school','skuːl','school']]},
+ play:{ipa:'pleɪ',parts:[['play','pleɪ','play']]},like:{ipa:'laɪk',parts:[['like','laɪk','like']]}
+};
+function dEscape(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function dSound(it){
+ const known=D_SOUND_BANK[dKey(it.en)];
+ if(known) return {ipa:known.ipa,parts:known.parts.map(p=>({text:p[0],ipa:p[1],say:p[2]})),source:'built-in'};
+ const p=it.pronunciation;
+ if(!p||typeof p.ipa!=='string'||!Array.isArray(p.parts)||!p.parts.length) return null;
+ const parts=p.parts.filter(x=>x&&typeof x.text==='string'&&typeof x.ipa==='string'&&x.text&&x.ipa);
+ if(parts.length!==p.parts.length||parts.map(x=>x.text).join('').toLowerCase()!==dKey(it.en))return null;
+ // Unverified fragments must not be spoken as standalone English words.
+ return {ipa:p.ipa.replace(/^\/|\/$/g,''),parts:parts.map(x=>({text:x.text,ipa:x.ipa.replace(/^\/|\/$/g,''),say:null})),source:'ai'};
+}
+let dSoundRun=0,dSoundTimer=null,dSoundUtterance=null;
+function dStopSound(){
+ dSoundRun++;clearTimeout(dSoundTimer);dSoundTimer=null;
+ if('speechSynthesis'in window)speechSynthesis.cancel();
+ dSoundUtterance=null;
+ document.querySelectorAll('.sound-part.is-speaking,.sound-word.is-speaking').forEach(x=>x.classList.remove('is-speaking'));
+ const play=$('sound-sequence');if(play){play.disabled=false;play.textContent='▶ 拆开听，再连起来';}
+}
+function dSoundStatus(t){const el=$('sound-status');if(el)el.textContent=t;}
+function dPlaySound(steps){
+ dStopSound();Say.stop();
+ if(!('speechSynthesis'in window)){dSoundStatus('此浏览器不支持朗读，请换用支持系统语音的浏览器。');return;}
+ const token=dSoundRun;
+ const button=$('sound-sequence');if(button){button.disabled=true;button.textContent='正在读…';}
+ function next(i){
+  if(token!==dSoundRun)return;
+  document.querySelectorAll('.is-speaking').forEach(x=>x.classList.remove('is-speaking'));
+  if(i===steps.length){dSoundStatus('轮到你了：看着单词，自己连起来读一遍。');if(button){button.disabled=false;button.textContent='▶ 拆开听，再连起来';}return;}
+  const step=steps[i],el=step.part==null?$('sound-word'):document.querySelector('[data-sound-part="'+step.part+'"]');
+  const u=new SpeechSynthesisUtterance(step.text);dSoundUtterance=u;
+  const voices=speechSynthesis.getVoices();
+  u.voice=voices.find(v=>v.name===Say.current()&&/^en-US/i.test(v.lang))||voices.find(v=>/^en-US/i.test(v.lang))||null;
+  u.lang='en-US';u.rate=step.part==null?Say.rate():Math.max(.55,Math.min(.75,Say.rate()));u.pitch=1.03;
+  if(el)el.classList.add('is-speaking');dSoundStatus(step.label||'听完整单词，再跟读');
+  let done=false;
+  u.onend=()=>{if(done||token!==dSoundRun)return;done=true;clearTimeout(dSoundTimer);dSoundTimer=setTimeout(()=>next(i+1),360);};
+  u.onerror=()=>{if(token!==dSoundRun)return;done=true;dStopSound();dSoundStatus('朗读未能播放。请检查设备的英语语音，再点一次。');};
+  dSoundTimer=setTimeout(()=>{if(!done&&token===dSoundRun){dStopSound();dSoundStatus('没有收到语音响应，请检查设备的英语语音。');}},15000);
+  try{speechSynthesis.resume();speechSynthesis.speak(u);}catch(e){u.onerror();}
+ }
+ next(0);
+}
+function dSoundMarkup(it){
+ const p=dSound(it);if(!p)return '<div class="sound-missing">尚未补充读音拆分；可在管理词库中「重新分析拆词」。</div>';
+ const canSplit=p.parts.length>1&&p.parts.every(x=>x.say);
+ return '<section class="sound-panel" aria-label="读音拆分">'+
+ '<div class="sound-heading"><span>读音拆分</span><span class="sound-accent">美式 · '+p.parts.length+' 个音节</span></div>'+
+ '<div class="sound-ipa">/'+dEscape(p.ipa)+'/</div>'+
+ '<div class="sound-parts">'+p.parts.map((x,i)=>'<button type="button" class="sound-part tone-'+i%3+'" data-sound-part="'+i+'" aria-label="'+dEscape(x.say?'听 '+x.text:'在完整单词中听 '+x.text)+'"><span class="sound-spelling">'+dEscape(x.text)+'</span><span class="sound-part-ipa">/'+dEscape(x.ipa)+'/</span><span class="sound-tap">'+(x.say?'点击听音':'整词中听')+'</span></button>').join('<span class="sound-link" aria-hidden="true">·</span>')+'</div>'+
+ '<div class="sound-actions">'+(canSplit?'<button class="fbtn hot" id="sound-sequence">▶ 拆开听，再连起来</button>':'')+'<button class="fbtn" id="sound-whole">🔊 听完整单词</button></div>'+
+ '<div class="sound-status" id="sound-status" role="status" aria-live="polite">'+(canSplit?'点小卡片听一段，再把它们连起来。':p.parts.length===1?'这个词只有一个音节，一口气读出来。':'看音标拆分，跟完整单词读；部分音节暂不单独发音。')+'</div>'+
+ (p.source==='ai'?'<div class="sound-ai-note">AI 生成音标，建议家长核对</div>':'')+'</section>';
+}
+function dBindSound(it){
+ const p=dSound(it);const whole=()=>dPlaySound([{text:it.en,part:null}]);
+ $('st-spk').onclick=whole;
+ if(!p)return;
+ $('sound-whole').onclick=whole;
+ document.querySelectorAll('[data-sound-part]').forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.soundPart,x=p.parts[i];
+  dPlaySound([{text:x.say||it.en,part:x.say?i:null,label:x.say?'听这一段：'+x.text:'在完整单词中听 '+x.text+' /'+x.ipa+'/'}]);
+ });
+ if($('sound-sequence'))$('sound-sequence').onclick=()=>dPlaySound(p.parts.map((x,i)=>({text:x.say,part:i,label:'第 '+(i+1)+' 段：'+x.text})).concat([{text:it.en,part:null,label:'连起来：'+it.en}]));
+}
+function dStartSoundDemo(){
+ DITEMS=[
+ {en:'classmate',zh:'同学',morph:[{p:'class',zh:'班级'},{p:'mate',zh:'伙伴'}]},
+ {en:'monkey',zh:'猴子',whole:true,reason:'按声音记，不把 mon + key 当成词义拆分。'},
+ {en:'bedroom',zh:'卧室',morph:[{p:'bed',zh:'床'},{p:'room',zh:'房间'}]},
+ {en:'name',zh:'名字',whole:true,reason:'name 是一个音节，末尾 e 不单独发音。'}
+ ].map(x=>Object.assign({kind:'w'},x));DI=0;nav('d-study');dStudyShow();
+}
+
 /* ---------------- 背词 ---------------- */
 function dStartStudy(){
   DITEMS=dScopeItems(DSCOPE).filter(x=>x.kind==="w"); DI=0;
@@ -2386,12 +2518,14 @@ function dStudyShow(){
   DITEMS.forEach((_,k)=>{ const d=document.createElement("div");
     d.className=k<DI?"on":k===DI?"now":""; beads.appendChild(d); });
   const card=$("st-card");
-  card.innerHTML='<button class="wspk" id="st-spk">🔊</button>'+
-    '<div style="text-align:center"><div class="wword">'+it.en+'</div>'+
-    '<div style="font-size:15px;color:var(--soft);margin-top:6px">'+(it.zh||"")+'</div>'+
-    (it.syll&&it.kind==="w"?'<div style="font-size:14px;color:var(--green-d);margin-top:8px">'+
-      it.syll.join(" · ")+'</div>':'')+'</div>';
-  $("st-spk").onclick=e=>{ e.stopPropagation(); Say(it.en); };
+  dStopSound();
+  card.innerHTML='<button class="wspk" id="st-spk" aria-label="朗读完整单词">🔊</button>'+
+    '<div class="study-content"><div class="wword sound-word" id="sound-word">'+dEscape(it.en)+'</div>'+
+    '<div class="study-zh">'+dEscape(it.zh||"")+'</div>'+
+    (it.kind==="w"?dSoundMarkup(it):'')+'</div>';
+  dBindSound(it);
+  $("st-prev").disabled=DI===0;
+  $("st-next").textContent=DI===DITEMS.length-1?'完成':'下一个';
   const mo=$("st-morph");
   if(it.kind==="s"){ mo.innerHTML='<span class="whole">整句默写</span>'; }
   else if(it.morph&&it.morph.length){
@@ -2665,7 +2799,7 @@ $("d-manual").onclick=async()=>{
       r.words.forEach(a=>{
         const t=words.find(x=>x.en.toLowerCase()===(a.en||"").toLowerCase());
         if(t){ t.syll=a.syll&&a.syll.length?a.syll:t.syll; t.morph=a.whole?null:(a.morph||null);
-               t.whole=!!a.whole; t.reason=a.reason||""; t.zh=t.zh||a.zh||""; }
+               t.pronunciation=a.pronunciation||null; t.whole=!!a.whole; t.reason=a.reason||""; t.zh=t.zh||a.zh||""; }
       });
     }
     $("d-pnote").textContent="";
@@ -2687,6 +2821,7 @@ $("d-reanalyze").onclick=async()=>{
     if(!DICT.words[k]) return;
     const w=DICT.words[k];
     if(a.syll&&a.syll.length) w.syll=a.syll;
+    w.pronunciation=a.pronunciation||null;
     w.morph=a.whole?null:(a.morph||null);
     w.whole=!!a.whole; w.reason=a.reason||"";
     if(!w.zh && a.zh) w.zh=a.zh;
@@ -2750,6 +2885,7 @@ function view(v){
   });
 }
 function nav(to,push){
+  dStopSound();
   Say.stop();
   if(push!==false && to!==CUR) PREV.push(CUR);
   CUR=to;
@@ -2788,26 +2924,14 @@ document.querySelectorAll("[data-cat]").forEach(b=>{
 $("ava").onclick=()=>{ if(CUR!=="home") $("confirm").classList.add("on"); };
 $("c-stay").onclick=()=>$("confirm").classList.remove("on");
 $("c-go").onclick=()=>{ $("confirm").classList.remove("on"); /* ================= 版本与强制更新 ================= */
-const APP_VERSION="v18";
+const APP_VERSION="v19";
 $("verline").textContent=APP_VERSION;
 $("btn-update").onclick=async function(){
-  const note=$("upnote"), btn=$("btn-update");
-  btn.disabled=true; note.textContent="正在检查…";
-  try{
-    if("serviceWorker" in navigator){
-      const regs=await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r=>r.update().catch(function(){})));
-    }
-    if(window.caches){
-      const keys=await caches.keys();
-      await Promise.all(keys.map(k=>caches.delete(k)));
-    }
-    note.textContent="已清空缓存，正在重新加载…";
-    setTimeout(function(){ location.reload(); }, 400);
-  }catch(e){
-    note.textContent="更新失败："+e.message+"　可以直接下拉刷新试试。";
-    btn.disabled=false;
-  }
+ const btn=$("btn-update"),note=$("upnote");btn.disabled=true;note.textContent="正在检查更新…";
+ try {
+  if("serviceWorker" in navigator){const reg=await navigator.serviceWorker.getRegistration("./");if(reg)await reg.update();}
+  note.textContent="正在重新载入…";location.reload();
+ }catch(e){note.textContent="更新失败，请检查网络后重试。";btn.disabled=false;}
 };
 
 /* 首页场景与图标：使用插画素材 */
@@ -2909,26 +3033,14 @@ if("speechSynthesis" in window){
 }
 
 /* ================= 版本与强制更新 ================= */
-const APP_VERSION="v18";
+const APP_VERSION="v19";
 $("verline").textContent=APP_VERSION;
 $("btn-update").onclick=async function(){
-  const note=$("upnote"), btn=$("btn-update");
-  btn.disabled=true; note.textContent="正在检查…";
-  try{
-    if("serviceWorker" in navigator){
-      const regs=await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r=>r.update().catch(function(){})));
-    }
-    if(window.caches){
-      const keys=await caches.keys();
-      await Promise.all(keys.map(k=>caches.delete(k)));
-    }
-    note.textContent="已清空缓存，正在重新加载…";
-    setTimeout(function(){ location.reload(); }, 400);
-  }catch(e){
-    note.textContent="更新失败："+e.message+"　可以直接下拉刷新试试。";
-    btn.disabled=false;
-  }
+ const btn=$("btn-update"),note=$("upnote");btn.disabled=true;note.textContent="正在检查更新…";
+ try {
+  if("serviceWorker" in navigator){const reg=await navigator.serviceWorker.getRegistration("./");if(reg)await reg.update();}
+  note.textContent="正在重新载入…";location.reload();
+ }catch(e){note.textContent="更新失败，请检查网络后重试。";btn.disabled=false;}
 };
 
 /* 首页场景与图标：使用插画素材 */

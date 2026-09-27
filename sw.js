@@ -1,53 +1,25 @@
-/* Henryingo 离线缓存
-   改版本号就会触发更新：换了 index.html 之后把 CACHE 改成新的名字即可 */
-const CACHE = "henryingo-v18";
-const FILES = [
-  "./",
-  "./index.html",
-  "./assets.js",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png",
-  "./icon-maskable-192.png",
-  "./icon-maskable-512.png"
-];
-
-self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(FILES))
-      .then(() => self.skipWaiting())
-      .catch(() => self.skipWaiting())     // 某个文件缺失也不要卡住安装
-  );
+/* Henryingo v19: phonics study cards. */
+const PREFIX="henryingo-";
+const CACHE="henryingo-v19-phonics-"+encodeURIComponent(self.registration.scope);
+const FILES=["./","./index.html","./assets.js","./manifest.json","./icon-192.png","./icon-512.png","./icon-maskable-192.png","./icon-maskable-512.png"];
+self.addEventListener("install",event=>{
+ event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES.map(url=>new Request(url,{cache:"reload"})))).then(()=>self.skipWaiting()));
 });
-
-self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+self.addEventListener("activate",event=>{
+ event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE&&(key==="henryingo-v18"||key.endsWith(encodeURIComponent(self.registration.scope))&&key.startsWith(PREFIX))).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
 });
-
-self.addEventListener("fetch", e => {
-  const req = e.request;
-  if (req.method !== "GET") return;
-
-  // DeepSeek 之类的外部请求一律直连，不进缓存
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
-
-  // 先给缓存里的，同时后台悄悄更新
-  e.respondWith(
-    caches.match(req).then(hit => {
-      const live = fetch(req).then(res => {
-        if (res && res.status === 200) {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => hit);
-      return hit || live;
-    })
-  );
+self.addEventListener("fetch",event=>{
+ const req=event.request,url=new URL(req.url);
+ if(req.method!=="GET"||url.origin!==self.location.origin||!url.href.startsWith(self.registration.scope))return;
+ // Fresh pages online; a complete cached copy when offline.
+ if(req.mode==="navigate"){
+  event.respondWith(fetch(req).then(res=>{
+   if(res.ok){const copy=res.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(req,copy)));}
+   return res;
+  }).catch(async()=>await caches.match(req)||await caches.match(new URL("./index.html",self.registration.scope))||Response.error()));return;
+ }
+ event.respondWith(caches.open(CACHE).then(async cache=>{
+  const hit=await cache.match(req);if(hit)return hit;
+  const res=await fetch(req);if(res.ok)await cache.put(req,res.clone());return res;
+ }));
 });
