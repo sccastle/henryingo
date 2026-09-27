@@ -1,6 +1,6 @@
-/* Henryingo v20: phonics study cards. */
+/* Henryingo v21: phonics study cards. */
 const PREFIX="henryingo-";
-const CACHE="henryingo-v20-phonics-"+encodeURIComponent(self.registration.scope);
+const CACHE="henryingo-v21-phonics-"+encodeURIComponent(self.registration.scope);
 const FILES=["./","./index.html","./assets.js","./manifest.json","./icon-192.png","./icon-512.png","./icon-maskable-192.png","./icon-maskable-512.png"];
 self.addEventListener("install",event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES.map(url=>new Request(url,{cache:"reload"})))).then(()=>self.skipWaiting()));
